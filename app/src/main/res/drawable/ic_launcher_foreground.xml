@@ -1,0 +1,30 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Beautiful organic leaf shape -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,25 C38,25 28,38 28,54 C28,70 54,85 54,85 C54,85 80,70 80,54 C80,38 70,25 54,25 Z" />
+        
+    <!-- Styled stem vein cut/stroke inside the leaf -->
+    <path
+        android:strokeColor="#0D631B"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:pathData="M54,33 L54,72" />
+        
+    <path
+        android:strokeColor="#0D631B"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M54,55 C54,55 44,48 38,50" />
+        
+    <path
+        android:strokeColor="#0D631B"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M54,45 C54,45 64,38 70,41" />
+</vector>

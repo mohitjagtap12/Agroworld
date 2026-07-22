@@ -1,0 +1,6 @@
+{
+  "name": "AgroWorld",
+  "description": "Connecting Farmers, Buyers & Agricultural Services. An elegant, modern, and highly-polished marketplace application built on Material 3 design.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
