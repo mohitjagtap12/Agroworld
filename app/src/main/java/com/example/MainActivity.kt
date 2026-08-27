@@ -74,18 +74,16 @@ class MainActivity : ComponentActivity() {
             arguments = listOf(navArgument("role") { type = NavType.StringType })
           ) { backStackEntry ->
             val role = backStackEntry.arguments?.getString("role") ?: "customer"
-            if (role.lowercase() == "farmer") {
-              FarmerPortalScreen(navController = navController)
-            } else if (role.lowercase() == "customer") {
-              CustomerPortalScreen(navController = navController)
-            } else if (role.lowercase() == "broker") {
-              BrokerPortalScreen(navController = navController)
-            } else if (role.lowercase() == "seller") {
-              SellerPortalScreen(navController = navController)
-            } else if (role.lowercase() == "delivery") {
-              DeliveryPartnerPortalScreen(navController = navController)
-            } else {
-              DashboardScreen(role = role, navController = navController)
+            when (role.lowercase()) {
+              "farmer" -> FarmerPortalScreen(navController = navController)
+              "customer" -> CustomerPortalScreen(navController = navController)
+              "broker" -> BrokerPortalScreen(navController = navController)
+              "seller" -> SellerPortalScreen(navController = navController)
+              "labour" -> LabourPortalScreen(navController = navController)
+              "company" -> CompanyPortalScreen(navController = navController)
+              "delivery" -> DeliveryPartnerPortalScreen(navController = navController)
+              "waste", "agri_waste", "waste_buyer" -> AgriWasteMarketplaceScreen(navController = navController, initialMode = "buyer")
+              else -> DashboardScreen(role = role, navController = navController)
             }
           }
         }
@@ -445,31 +443,49 @@ fun RoleSelectionScreen(navController: NavController) {
     RoleInfo(
       id = "farmer",
       name = "Farmer",
-      description = "Sell crops directly to the market and buy essential supplies for your farm.",
+      description = "Manage crops, detect diseases with AI, hire labour, sell produce & waste, and buy farm supplies.",
       icon = Icons.Default.Agriculture
     ),
     RoleInfo(
-      id = "customer",
-      name = "Customer",
-      description = "Shop for fresh, farm-direct produce and premium organic agricultural products.",
-      icon = Icons.Default.ShoppingCart
+      id = "seller",
+      name = "Agri-Store Seller",
+      description = "List certified seeds, fertilizers, pesticides, and modern farming equipment to local farmers.",
+      icon = Icons.Default.Storefront
+    ),
+    RoleInfo(
+      id = "labour",
+      name = "Labour & Farm Squad",
+      description = "Receive hiring requests from farmers for harvesting, spraying, tilling, and planting with daily wage tracking.",
+      icon = Icons.Default.Engineering
+    ),
+    RoleInfo(
+      id = "company",
+      name = "Contract Farming Company",
+      description = "Publish institutional crop contracts with assured buyback prices, review farmer applications, and manage harvests.",
+      icon = Icons.Default.Handshake
     ),
     RoleInfo(
       id = "broker",
-      name = "Broker",
-      description = "Facilitate large-scale trade between producers and distributors with expert market data.",
+      name = "APMC Broker / Trader",
+      description = "Broadcast bulk crop demands, negotiate wholesale prices with farmers, and close high-volume deals.",
       icon = Icons.Default.TrendingUp
     ),
     RoleInfo(
-      id = "seller",
-      name = "Seller",
-      description = "Manage your inventory, list products, and reach a wider audience of agricultural buyers.",
-      icon = Icons.Default.Storefront
+      id = "customer",
+      name = "Customer / Direct Buyer",
+      description = "Shop fresh farm-direct fruits, vegetables, and grains directly from verified local growers.",
+      icon = Icons.Default.ShoppingCart
+    ),
+    RoleInfo(
+      id = "waste",
+      name = "Agri Waste & Biomass Buyer",
+      description = "Source wheat & rice straw, sugarcane trash, maize stalks, and coconut husks directly from farmers for biofuel, feed, & compost.",
+      icon = Icons.Default.Recycling
     ),
     RoleInfo(
       id = "delivery",
       name = "Delivery Partner",
-      description = "Be the vital link that brings fresh farm products directly to the customer's doorstep with speed and care.",
+      description = "Accept farm-to-table delivery jobs for produce, fertilizers, equipment, and biomass waste.",
       icon = Icons.Default.LocalShipping
     )
   )
@@ -478,7 +494,7 @@ fun RoleSelectionScreen(navController: NavController) {
     topBar = {
       Surface(
         tonalElevation = 0.dp,
-        color = Color(0xFFFDFBFF),
+        color = Color(0xFFF8FBF7),
         modifier = Modifier.fillMaxWidth()
       ) {
         Row(
@@ -494,7 +510,7 @@ fun RoleSelectionScreen(navController: NavController) {
             Icon(
               imageVector = Icons.Default.Agriculture,
               contentDescription = "AgroWorld Brand Icon",
-              tint = Color(0xFF0061A4),
+              tint = Color(0xFF2E7D32),
               modifier = Modifier.size(28.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -502,7 +518,7 @@ fun RoleSelectionScreen(navController: NavController) {
               text = "AgroWorld",
               fontSize = 20.sp,
               fontWeight = FontWeight.Bold,
-              color = Color(0xFF0061A4)
+              color = Color(0xFF2E7D32)
             )
           }
 
@@ -511,14 +527,14 @@ fun RoleSelectionScreen(navController: NavController) {
               text = "Market",
               fontSize = 14.sp,
               fontWeight = FontWeight.SemiBold,
-              color = Color(0xFF0061A4),
+              color = Color(0xFF2E7D32),
               modifier = Modifier.clickable { }
             )
             Text(
               text = "Help",
               fontSize = 14.sp,
               fontWeight = FontWeight.Medium,
-              color = Color(0xFF44474E),
+              color = Color(0xFF616161),
               modifier = Modifier.clickable { }
             )
           }
@@ -527,7 +543,7 @@ fun RoleSelectionScreen(navController: NavController) {
     },
     bottomBar = {
       Surface(
-        color = Color(0xFFFDFBFF),
+        color = Color(0xFFF8FBF7),
         tonalElevation = 4.dp,
         modifier = Modifier.fillMaxWidth()
       ) {
@@ -546,7 +562,7 @@ fun RoleSelectionScreen(navController: NavController) {
             },
             enabled = selectedRoleId != null,
             colors = ButtonDefaults.buttonColors(
-              containerColor = Color(0xFF0061A4),
+              containerColor = Color(0xFF2E7D32),
               contentColor = Color.White,
               disabledContainerColor = Color(0xFFC4C6D0).copy(alpha = 0.4f),
               disabledContentColor = Color(0xFF1A1C1E).copy(alpha = 0.4f)
@@ -558,7 +574,7 @@ fun RoleSelectionScreen(navController: NavController) {
               .testTag("continue_button")
           ) {
             Text(
-              text = "Continue",
+              text = "Continue to Portal",
               fontSize = 16.sp,
               fontWeight = FontWeight.Bold
             )
@@ -573,13 +589,13 @@ fun RoleSelectionScreen(navController: NavController) {
             Text(
               text = "Already have an account? ",
               fontSize = 14.sp,
-              color = Color(0xFF44474E)
+              color = Color(0xFF616161)
             )
             Text(
               text = "Log In",
               fontSize = 14.sp,
               fontWeight = FontWeight.Bold,
-              color = Color(0xFF0061A4),
+              color = Color(0xFF2E7D32),
               modifier = Modifier.clickable { }
             )
           }
@@ -591,31 +607,31 @@ fun RoleSelectionScreen(navController: NavController) {
     LazyColumn(
       modifier = Modifier
         .fillMaxSize()
-        .background(Color(0xFFFDFBFF))
+        .background(Color(0xFFF8FBF7))
         .padding(paddingValues)
         .padding(horizontal = 20.dp),
-      verticalArrangement = Arrangement.spacedBy(16.dp),
-      contentPadding = PaddingValues(top = 16.dp, bottom = 24.dp)
+      verticalArrangement = Arrangement.spacedBy(14.dp),
+      contentPadding = PaddingValues(top = 12.dp, bottom = 24.dp)
     ) {
       item {
         Column(
           modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp),
+            .padding(vertical = 10.dp),
           horizontalAlignment = Alignment.CenterHorizontally
         ) {
           Text(
             text = "Welcome to AgroWorld",
-            fontSize = 28.sp,
+            fontSize = 26.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF1A1C1E),
+            color = Color(0xFF212121),
             textAlign = TextAlign.Center
           )
           Spacer(modifier = Modifier.height(4.dp))
           Text(
-            text = "Select your role to continue your journey",
-            fontSize = 16.sp,
-            color = Color(0xFF44474E),
+            text = "Select your role to access your dedicated dashboard",
+            fontSize = 14.sp,
+            color = Color(0xFF616161),
             textAlign = TextAlign.Center
           )
         }
@@ -624,11 +640,11 @@ fun RoleSelectionScreen(navController: NavController) {
       items(roles) { role ->
         val isSelected = selectedRoleId == role.id
         Card(
-          shape = RoundedCornerShape(24.dp),
+          shape = RoundedCornerShape(20.dp),
           colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) Color(0xFFE7F0FF) else Color(0xFFFFFFFF)
+            containerColor = if (isSelected) Color(0xFFE8F5E9) else Color(0xFFFFFFFF)
           ),
-          border = if (isSelected) BorderStroke(1.5.dp, Color(0xFF0061A4)) else BorderStroke(1.dp, Color(0xFFC4C6D0)),
+          border = if (isSelected) BorderStroke(1.5.dp, Color(0xFF2E7D32)) else BorderStroke(1.dp, Color(0xFFE0E0E0)),
           elevation = CardDefaults.cardElevation(defaultElevation = if (isSelected) 3.dp else 1.dp),
           modifier = Modifier
             .fillMaxWidth()
@@ -638,39 +654,39 @@ fun RoleSelectionScreen(navController: NavController) {
           Row(
             modifier = Modifier
               .fillMaxWidth()
-              .padding(18.dp),
+              .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
           ) {
             Box(
               modifier = Modifier
-                .size(56.dp)
+                .size(52.dp)
                 .clip(CircleShape)
-                .background(if (isSelected) Color(0xFF0061A4) else Color(0xFFF2F0F4)),
+                .background(if (isSelected) Color(0xFF2E7D32) else Color(0xFFF1F8E9)),
               contentAlignment = Alignment.Center
             ) {
               Icon(
                 imageVector = role.icon,
                 contentDescription = role.name,
-                tint = if (isSelected) Color.White else Color(0xFF0061A4),
-                modifier = Modifier.size(28.dp)
+                tint = if (isSelected) Color.White else Color(0xFF2E7D32),
+                modifier = Modifier.size(26.dp)
               )
             }
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(14.dp))
 
             Column(modifier = Modifier.weight(1f)) {
               Text(
                 text = role.name,
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                color = if (isSelected) Color(0xFF0061A4) else Color(0xFF1A1C1E)
+                color = if (isSelected) Color(0xFF2E7D32) else Color(0xFF212121)
               )
-              Spacer(modifier = Modifier.height(4.dp))
+              Spacer(modifier = Modifier.height(3.dp))
               Text(
                 text = role.description,
-                fontSize = 13.sp,
-                color = Color(0xFF44474E),
-                lineHeight = 18.sp
+                fontSize = 12.sp,
+                color = Color(0xFF616161),
+                lineHeight = 16.sp
               )
             }
 
@@ -680,7 +696,7 @@ fun RoleSelectionScreen(navController: NavController) {
                 modifier = Modifier
                   .size(24.dp)
                   .clip(CircleShape)
-                  .background(Color(0xFF0061A4)),
+                  .background(Color(0xFF2E7D32)),
                 contentAlignment = Alignment.Center
               ) {
                 Icon(
