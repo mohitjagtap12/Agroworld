@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FBF7">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Top Header Bar -->
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbarCompanyPortal"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#2E7D32"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@android:color/white"
+            app:title="🏢 Company Contract Hub"
+            app:titleTextColor="@android:color/white">
+
+            <ImageButton
+                android:id="@+id/btnRefreshCompany"
+                android:layout_width="40.dp"
+                android:layout_height="40.dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="12.dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Refresh"
+                android:src="@drawable/ic_refresh"
+                app:tint="@android:color/white" />
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16.dp">
+
+                <!-- Company Profile Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="16.dp"
+                    app:cardElevation="2.dp"
+                    app:strokeColor="#C8E6C9"
+                    app:strokeWidth="1.dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16.dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="48.dp"
+                                android:layout_height="48.dp"
+                                android:background="#E8F5E9"
+                                android:gravity="center"
+                                android:text="🏢"
+                                android:textSize="24.sp" />
+
+                            <LinearLayout
+                                android:layout_width="0.dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12.dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvCompanyName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="#212121"
+                                    android:textSize="16.sp"
+                                    android:textStyle="bold"
+                                    tools:text="Sahyadri Farmers Producer Co. Ltd." />
+
+                                <TextView
+                                    android:id="@+id/tvCompanyType"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="#616161"
+                                    android:textSize="12.sp"
+                                    tools:text="Agri-Export &amp; Food Processing Hub" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="#E8F5E9"
+                                android:paddingHorizontal="8.dp"
+                                android:paddingVertical="4.dp"
+                                android:text="⭐ 4.9 Verified"
+                                android:textColor="#2E7D32"
+                                android:textSize="11.sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvCompanyContactDetails"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10.dp"
+                            android:textColor="#757575"
+                            android:textSize="11.sp"
+                            tools:text="Contact: Vikram Thorat • +91 20 2554 8899 • Pune Cluster &amp; Nashik Highway\nFSSAI #11520038000142 / GSTIN #27AABCS1429K1Z4" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Action: Publish New Contract Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnOpenCreateContract"
+                    android:layout_width="match_parent"
+                    android:layout_height="50.dp"
+                    android:layout_marginTop="14.dp"
+                    android:backgroundTint="#2E7D32"
+                    android:text="➕ Publish New Crop Contract"
+                    android:textColor="@android:color/white"
+                    android:textSize="14.sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12.dp" />
+
+                <!-- Quick Metrics 4-Grid -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14.dp"
+                    android:orientation="horizontal">
+
+                    <!-- Published Deals -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0.dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4.dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="@android:color/white"
+                        app:cardCornerRadius="12.dp"
+                        app:cardElevation="1.dp"
+                        app:strokeColor="#E2E8F0"
+                        app:strokeWidth="1.dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="10.dp">
+
+                            <TextView
+                                android:id="@+id/tvCompanyPublishedCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#2E7D32"
+                                android:textSize="18.sp"
+                                android:textStyle="bold"
+                                tools:text="5" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Published\nContracts"
+                                android:textColor="#616161"
+                                android:textSize="10.sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Applications Received -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0.dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="4.dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="@android:color/white"
+                        app:cardCornerRadius="12.dp"
+                        app:cardElevation="1.dp"
+                        app:strokeColor="#E2E8F0"
+                        app:strokeWidth="1.dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="10.dp">
+
+                            <TextView
+                                android:id="@+id/tvCompanyAppsCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#F9A825"
+                                android:textSize="18.sp"
+                                android:textStyle="bold"
+                                tools:text="2" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Farmer\nApplications"
+                                android:textColor="#616161"
+                                android:textSize="10.sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Active Contracts -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0.dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="4.dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="@android:color/white"
+                        app:cardCornerRadius="12.dp"
+                        app:cardElevation="1.dp"
+                        app:strokeColor="#E2E8F0"
+                        app:strokeWidth="1.dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="10.dp">
+
+                            <TextView
+                                android:id="@+id/tvCompanyActiveCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#1976D2"
+                                android:textSize="18.sp"
+                                android:textStyle="bold"
+                                tools:text="1" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Active\nFarms"
+                                android:textColor="#616161"
+                                android:textSize="10.sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Completed Deals -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0.dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4.dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="@android:color/white"
+                        app:cardCornerRadius="12.dp"
+                        app:cardElevation="1.dp"
+                        app:strokeColor="#E2E8F0"
+                        app:strokeWidth="1.dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="10.dp">
+
+                            <TextView
+                                android:id="@+id/tvCompanyCompletedCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#388E3C"
+                                android:textSize="18.sp"
+                                android:textStyle="bold"
+                                tools:text="0" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Fulfilled\nDeals"
+                                android:textColor="#616161"
+                                android:textSize="10.sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <!-- Tab Section Switcher -->
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayoutCompanySections"
+                    android:layout_width="match_parent"
+                    android:layout_height="44.dp"
+                    android:layout_marginTop="14.dp"
+                    android:background="@drawable/bg_rounded_light_green"
+                    app:tabGravity="fill"
+                    app:tabIndicatorColor="#2E7D32"
+                    app:tabIndicatorHeight="3.dp"
+                    app:tabMode="scrollable"
+                    app:tabSelectedTextColor="#2E7D32"
+                    app:tabTextAppearance="@android:style/TextAppearance.Small"
+                    app:tabTextColor="#616161">
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Published Deals" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Farmer Applications" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Active Contracts" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Completed" />
+                </com.google.android.material.tabs.TabLayout>
+
+                <!-- RecyclerView for Contracts or Applications -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvCompanyList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12.dp"
+                    android:nestedScrollingEnabled="false"
+                    tools:itemCount="2"
+                    tools:listitem="@layout/item_contract_application" />
+
+                <!-- Empty State Layout -->
+                <LinearLayout
+                    android:id="@+id/layoutCompanyEmpty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="36.dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="24.dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🏢"
+                        android:textSize="48.sp" />
+
+                    <TextView
+                        android:id="@+id/tvCompanyEmptyTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12.dp"
+                        android:text="No items found in this section."
+                        android:textColor="#212121"
+                        android:textSize="15.sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvCompanyEmptySubtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4.dp"
+                        android:gravity="center"
+                        android:text="Publish new contracts or check incoming farmer applications."
+                        android:textColor="#757575"
+                        android:textSize="12.sp" />
+                </LinearLayout>
+
+                <!-- Loading Indicator -->
+                <ProgressBar
+                    android:id="@+id/pbCompanyLoading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="24.dp"
+                    android:indeterminateTint="#2E7D32"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

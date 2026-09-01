@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="1dp"
+    app:strokeColor="#E0E0E0"
+    app:strokeWidth="1dp"
+    app:cardBackgroundColor="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="14dp">
+
+        <!-- Top Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvHistTypeBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_status_green"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="3dp"
+                android:text="🏪 Seller Product"
+                android:textColor="#2E7D32"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tvHistFee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+ ₹210.00"
+                android:textColor="#2E7D32"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Item & Date -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvHistEmoji"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/bg_rounded_light_green"
+                android:gravity="center"
+                android:text="🌱"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvHistSummary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Wheat Certified Seeds (HD-2967) - 40 kg"
+                    android:textColor="#212121"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvHistIds"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="DEL-2026-000098 • Ref: AW-ORD-8094"
+                    android:textColor="#757575"
+                    android:textSize="11sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="8dp"
+            android:background="#F0F0F0" />
+
+        <!-- Route Summary -->
+        <TextView
+            android:id="@+id/tvHistRoute"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pickup: APMC Market Yard, Pune ➔ Drop: Rajgurunagar (Khed)"
+            android:textColor="#424242"
+            android:textSize="12sp" />
+
+        <!-- Completed & Recipient Status -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/ic_check_circle"
+                app:tint="#2E7D32" />
+
+            <TextView
+                android:id="@+id/tvHistCompletedInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:text="Delivered Yesterday • Handed to Vilasrao Gade"
+                android:textColor="#2E7D32"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/tvHistMethod"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_status_blue"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:text="OTP Verified"
+                android:textColor="#0061A4"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🛍️ Order Checkout"
+            android:textColor="@color/farmer_primary_dark"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Fast doorstep delivery by AgroWorld Logistics"
+            android:textColor="@color/farmer_text_secondary"
+            android:textSize="12sp" />
+
+        <!-- Order Items Summary Box -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="12dp"
+            app:strokeColor="@color/farmer_stroke"
+            app:strokeWidth="1dp"
+            app:cardBackgroundColor="@color/farmer_light_bg">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="14dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvCheckoutItemsSummary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/farmer_text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="2 Items • Total Payable: ₹560" />
+
+                <TextView
+                    android:id="@+id/tvCheckoutItemsDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/farmer_text_secondary"
+                    android:textSize="12sp"
+                    tools:text="• Wheat Seeds (2 kg) - ₹240\n• NPK 19:19:19 (2 kg) - ₹320" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Delivery Address Information -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Delivery Address &amp; Contact Details"
+            android:textColor="@color/farmer_text_primary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Full Farm / House Address *"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCheckoutAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Gat No. 42, Near Canal Road" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Village *"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCheckoutVillage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Narayangaon" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:hint="Taluka *"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCheckoutTaluka"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Junnar" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="District *"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCheckoutDistrict"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pune" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Payment Method Selection -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Payment Method"
+            android:textColor="@color/farmer_text_primary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:id="@+id/rgPaymentMethods"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp">
+
+            <RadioButton
+                android:id="@+id/rbCod"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="💵 Cash on Delivery (Pay upon arrival)"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/rbUpi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📱 UPI / Kisan QR Pay" />
+
+            <RadioButton
+                android:id="@+id/rbKisanCredit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🏦 Kisan Credit / Net Banking" />
+        </RadioGroup>
+
+        <!-- Delivery Notes -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Delivery Instructions / Landmark (Optional)"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCheckoutNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Deliver near farm pump house" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnConfirmPlaceOrder"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="20dp"
+            android:text="[PLACE ORDER]"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/farmer_primary"
+            app:cornerRadius="12dp" />
+
+    </LinearLayout>
+</ScrollView>

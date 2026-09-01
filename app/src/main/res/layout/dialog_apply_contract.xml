@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20.dp">
+
+        <TextView
+            android:id="@+id/tvApplyTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📝 Apply for Contract Farming"
+            android:textColor="#212121"
+            android:textSize="17.sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvApplySubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2.dp"
+            android:textColor="#616161"
+            android:textSize="12.sp"
+            tools:text="Contract with Sahyadri Farmers Producer Co. Ltd." />
+
+        <!-- Contract Summary Pill -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12.dp"
+            android:background="#E8F5E9"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10.dp">
+
+            <TextView
+                android:id="@+id/tvApplyContractCrop"
+                android:layout_width="0.dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#2E7D32"
+                android:textSize="13.sp"
+                android:textStyle="bold"
+                tools:text="🧅 Pune Red Onions (N-53)" />
+
+            <TextView
+                android:id="@+id/tvApplyOfferedPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#2E7D32"
+                android:textSize="13.sp"
+                android:textStyle="bold"
+                tools:text="₹22,000 / Ton" />
+        </LinearLayout>
+
+        <!-- Farmer Profile Summary Pre-filled -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12.dp"
+            android:background="#F8FBF7"
+            android:orientation="vertical"
+            android:padding="10.dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="👨‍🌾 Farmer Application Details"
+                android:textColor="#757575"
+                android:textSize="11.sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvApplyFarmerInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2.dp"
+                android:textColor="#212121"
+                android:textSize="12.sp"
+                tools:text="Rameshwar Patil • +91 98220 12345 • Narayangaon, Junnar" />
+        </LinearLayout>
+
+        <!-- Land Area (Acres) Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilLandArea"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14.dp"
+            android:hint="Land Area Committed (Acres) *"
+            app:boxStrokeColor="#2E7D32">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etLandArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:text="3.5"
+                android:textSize="14.sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Expected Yield (Tons) Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilExpectedYield"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10.dp"
+            android:hint="Expected Production / Delivery Volume (Tons) *"
+            app:boxStrokeColor="#2E7D32">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etExpectedYield"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:text="35.0"
+                android:textSize="14.sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Expected Harvest Date Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilHarvestDate"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10.dp"
+            android:hint="Expected Harvest / Delivery Date *"
+            app:boxStrokeColor="#2E7D32">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etHarvestDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:text="Oct 2026"
+                android:textSize="14.sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Quality Notes Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilQualityNotes"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10.dp"
+            android:hint="Quality &amp; Farm Cultivation Notes"
+            app:boxStrokeColor="#2E7D32">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etQualityNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:lines="2"
+                android:text="Grade A export quality with drip irrigation and organic soil amendments."
+                android:textSize="13.sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Total Estimated Deal Value -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12.dp"
+            android:background="#F1F5F9"
+            android:orientation="horizontal"
+            android:padding="12.dp">
+
+            <TextView
+                android:layout_width="0.dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Estimated Contract Gross Value:"
+                android:textColor="#616161"
+                android:textSize="12.sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvEstimatedTotalValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#2E7D32"
+                android:textSize="14.sp"
+                android:textStyle="bold"
+                tools:text="₹7,70,000" />
+        </LinearLayout>
+
+        <!-- Safety Disclaimer Notice -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10.dp"
+            android:text="🛡️ By submitting, you confirm availability of land and commitment to agreed quality specifications."
+            android:textColor="#757575"
+            android:textSize="11.sp" />
+
+        <!-- Buttons Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16.dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCancelApply"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0.dp"
+                android:layout_height="48.dp"
+                android:layout_marginEnd="6.dp"
+                android:layout_weight="1"
+                android:text="Cancel"
+                android:textColor="#616161"
+                app:strokeColor="#BDBDBD" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnConfirmSubmitApply"
+                android:layout_width="0.dp"
+                android:layout_height="48.dp"
+                android:layout_marginStart="6.dp"
+                android:layout_weight="1"
+                android:backgroundTint="#2E7D32"
+                android:text="Submit Application"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -201,6 +201,7 @@ fun FarmerPortalScreen(navController: NavController) {
     // Dashboard Sub-screens:
     // "dashboard", "my_crops", "add_crop", "ai_disease", "agri_store", "hire_labour", "contract_farming", "agri_waste", "broker_trading", "direct_selling", "orders", "notifications", "profile", "weather", "gov_schemes"
     var currentSubScreen by remember { mutableStateOf("dashboard") }
+    var aiDetectionCropTarget by remember { mutableStateOf("Tomato") }
 
     // Quick Add Sheet Modal State
     var showQuickAddModal by remember { mutableStateOf(false) }
@@ -410,10 +411,12 @@ fun FarmerPortalScreen(navController: NavController) {
                         modifier = Modifier.testTag("nav_add_quick")
                     )
                     NavigationBarItem(
-                        selected = currentSubScreen == "orders",
-                        onClick = { currentSubScreen = "orders" },
+                        selected = currentSubScreen == "activities" || currentSubScreen == "orders",
+                        onClick = { currentSubScreen = "activities" },
                         icon = {
-                            val unconfirmed = ordersList.count { it.status == "Pending" }
+                            val unconfirmed = ordersList.count { it.status == "Pending" } +
+                                    AgriWasteDataHub.orders.count { it.status == "Waiting for Farmer" || it.status == "Order Placed" } +
+                                    AgroWorldLabourRepository.requirements.count { it.status == "Pending Acceptance" || it.status == "Open" }
                             BadgedBox(badge = {
                                 if (unconfirmed > 0) {
                                     Badge(containerColor = FarmerAccent) {
@@ -421,10 +424,10 @@ fun FarmerPortalScreen(navController: NavController) {
                                     }
                                 }
                             }) {
-                                Icon(Icons.Default.ReceiptLong, contentDescription = "Orders")
+                                Icon(Icons.Default.Inventory2, contentDescription = "Activities")
                             }
                         },
-                        label = { Text("Orders", fontSize = 11.sp, fontWeight = FontWeight.Bold) },
+                        label = { Text("Activities", fontSize = 11.sp, fontWeight = FontWeight.Bold) },
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = Color.White,
                             selectedTextColor = FarmerPrimary,
@@ -432,7 +435,7 @@ fun FarmerPortalScreen(navController: NavController) {
                             unselectedIconColor = FarmerTextSecondary,
                             unselectedTextColor = FarmerTextSecondary
                         ),
-                        modifier = Modifier.testTag("nav_orders")
+                        modifier = Modifier.testTag("nav_activities")
                     )
                     NavigationBarItem(
                         selected = currentSubScreen == "profile",
@@ -504,6 +507,11 @@ fun FarmerPortalScreen(navController: NavController) {
                     )
                     "my_crops" -> MyCropsView(
                         cropsList = cropsList,
+                        savedScans = savedDiseaseScans,
+                        onCheckDisease = { cropName ->
+                            aiDetectionCropTarget = cropName
+                            currentSubScreen = "ai_disease"
+                        },
                         onNavigateAdd = { currentSubScreen = "add_crop" },
                         onDeleteCrop = { id ->
                             cropsList.removeAll { it.id == id }
@@ -520,6 +528,8 @@ fun FarmerPortalScreen(navController: NavController) {
                         onBack = { currentSubScreen = "my_crops" }
                     )
                     "ai_disease" -> AiCropDiseaseDetectionView(
+                        initialCrop = aiDetectionCropTarget,
+                        myCrops = cropsList,
                         savedScans = savedDiseaseScans,
                         onSaveScan = { scan ->
                             savedDiseaseScans.add(0, scan)
@@ -534,6 +544,9 @@ fun FarmerPortalScreen(navController: NavController) {
                         onNavigateStore = { pesticideName ->
                             currentSubScreen = "agri_store"
                             Toast.makeText(context, "Showing store remedies for $pesticideName", Toast.LENGTH_SHORT).show()
+                        },
+                        onNavigateMyCrops = {
+                            currentSubScreen = "my_crops"
                         },
                         onBack = { currentSubScreen = "dashboard" }
                     )
@@ -559,7 +572,7 @@ fun FarmerPortalScreen(navController: NavController) {
                                 address = "$village, $taluka, $district"
                             ))
                             Toast.makeText(context, "Order placed successfully!", Toast.LENGTH_LONG).show()
-                            currentSubScreen = "orders"
+                            currentSubScreen = "activities"
                         },
                         onBack = { currentSubScreen = "dashboard" }
                     )
@@ -609,8 +622,12 @@ fun FarmerPortalScreen(navController: NavController) {
                         },
                         onBack = { currentSubScreen = "dashboard" }
                     )
-                    "orders" -> UnifiedOrdersView(
+                    "activities", "orders" -> FarmerActivitiesView(
                         orders = ordersList,
+                        contracts = contractList,
+                        brokerDemands = brokerDemands,
+                        produceList = directProduceList,
+                        onNavigate = { currentSubScreen = it },
                         onBack = { currentSubScreen = "dashboard" }
                     )
                     "notifications" -> NotificationsView(
@@ -627,6 +644,10 @@ fun FarmerPortalScreen(navController: NavController) {
                     onSelectAddCrop = {
                         showQuickAddModal = false
                         currentSubScreen = "add_crop"
+                    },
+                    onSelectPostLabour = {
+                        showQuickAddModal = false
+                        currentSubScreen = "hire_labour"
                     },
                     onSelectAddWaste = {
                         showQuickAddModal = false
@@ -672,50 +693,44 @@ fun FarmerDashboardMainView(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(50.dp)
-                            .clip(CircleShape)
-                            .background(FarmerPrimary.copy(alpha = 0.15f))
-                            .border(2.dp, FarmerPrimary, CircleShape),
-                        contentAlignment = Alignment.Center
+                Column {
+                    Text(
+                        text = "🌾 AgroWorld",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = FarmerPrimary
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = "Good Morning, $farmerName",
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = FarmerTextPrimary
+                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(top = 2.dp)
                     ) {
-                        Text(
-                            text = if (farmerName.isNotEmpty()) farmerName.first().toString() else "F",
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = FarmerPrimary
+                        Icon(
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = "Location",
+                            tint = FarmerSecondary,
+                            modifier = Modifier.size(14.dp)
                         )
-                    }
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Column {
+                        Spacer(modifier = Modifier.width(3.dp))
                         Text(
-                            text = "Namaskar, $farmerName 🙏",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = FarmerTextPrimary
+                            text = "$village, $taluka",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = FarmerTextSecondary
                         )
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Default.LocationOn,
-                                contentDescription = "Location",
-                                tint = FarmerPrimary,
-                                modifier = Modifier.size(14.dp)
-                            )
-                            Spacer(modifier = Modifier.width(2.dp))
-                            Text(
-                                text = "$village, $taluka (Pune)",
-                                fontSize = 12.sp,
-                                color = FarmerTextSecondary
-                            )
-                        }
                     }
                 }
 
                 IconButton(
                     onClick = { onNavigate("notifications") },
                     modifier = Modifier
+                        .size(44.dp)
                         .background(Color.White, CircleShape)
                         .border(1.dp, Color(0xFFE2E8F0), CircleShape)
                 ) {
@@ -744,7 +759,7 @@ fun FarmerDashboardMainView(
                     modifier = Modifier.padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("🌤️", fontSize = 36.sp)
+                    Text("🌤️", fontSize = 34.sp)
                     Spacer(modifier = Modifier.width(12.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -771,7 +786,7 @@ fun FarmerDashboardMainView(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column {
+                    Column(modifier = Modifier.weight(1f)) {
                         Text("My Farm Crops Overview", fontSize = 12.sp, color = Color.White.copy(alpha = 0.85f))
                         Text("${cropsList.size} Active Crops Listed", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.White)
                         Text("Total Estimated Area: 5.5 Acres", fontSize = 12.sp, color = Color.White.copy(alpha = 0.9f))
@@ -811,7 +826,7 @@ fun FarmerDashboardMainView(
                             Spacer(modifier = Modifier.width(8.dp))
                             Text("Active Labour Requirement", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = FarmerTextPrimary)
                         }
-                        Text("Manage ➔", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = FarmerPrimary)
+                        Text("Hire Labour ➔", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = FarmerPrimary)
                     }
 
                     if (activeReq != null) {
@@ -834,53 +849,76 @@ fun FarmerDashboardMainView(
             }
         }
 
-        // QUICK ACTIONS GRID (8 MAJOR MODULES)
+        // MAIN SERVICES & MARKETPLACES (9 SERVICES)
         item {
-            Text(
-                text = "Services & Marketplaces",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = FarmerTextPrimary
-            )
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text(
+                    text = "Farming Services & Marketplaces",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = FarmerTextPrimary
+                )
 
-            val actions = listOf(
-                Triple("AI Crop Disease", "🤖 Check Health", "ai_disease"),
-                Triple("My Crops", "🌱 Add & Manage", "my_crops"),
-                Triple("Buy Products", "🏪 Seeds & Fertilizer", "agri_store"),
-                Triple("Hire Labour", "👨‍🌾 Nearby Workers", "hire_labour"),
-                Triple("Contract Farming", "🤝 Company Deals", "contract_farming"),
-                Triple("List Agri Waste", "♻️ Sell Crop Residue", "agri_waste"),
-                Triple("Broker Trading", "📈 APMC Wholesale", "broker_trading"),
-                Triple("Sell to Customer", "🛒 Direct Selling", "direct_selling")
-            )
+                // 9 Action Cards Data
+                val serviceCards = listOf(
+                    FarmerServiceItem("🌱", "My Crops", "Manage crops and view crop information.", "my_crops", Color(0xFFE8F5E9)),
+                    FarmerServiceItem("🤖", "AI Disease Detection", "Check your crop health using a photo", "ai_disease", Color(0xFFE0F2FE)),
+                    FarmerServiceItem("👨‍🌾", "Hire Labour", "Post a farming work requirement and find nearby workers.", "hire_labour", Color(0xFFFFF3E0)),
+                    FarmerServiceItem("🏪", "Buy Farming Products", "Buy seeds, fertilizers, pesticides and equipment.", "agri_store", Color(0xFFF3E5F5)),
+                    FarmerServiceItem("🤝", "Contract Farming", "View and apply for farming contracts.", "contract_farming", Color(0xFFEDE7F6)),
+                    FarmerServiceItem("♻️", "List Agri Waste", "Sell agricultural waste by creating a listing.", "agri_waste", Color(0xFFE0F7FA)),
+                    FarmerServiceItem("📈", "Broker Trading", "View wholesale/bulk trading opportunities.", "broker_trading", Color(0xFFFFF8E1)),
+                    FarmerServiceItem("🛒", "Sell Farm Produce", "List farm produce for direct customers.", "direct_selling", Color(0xFFFBE9E7)),
+                    FarmerServiceItem("📦", "My Activities", "View labour jobs, orders, contracts, waste sales and other activities.", "activities", Color(0xFFF1F5F9))
+                )
 
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.padding(top = 8.dp)) {
-                for (r in 0 until 4) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        for (c in 0 until 2) {
-                            val act = actions[r * 2 + c]
-                            Card(
-                                shape = RoundedCornerShape(16.dp),
-                                colors = CardDefaults.cardColors(containerColor = Color.White),
-                                border = BorderStroke(1.dp, Color(0xFFE2E8F0)),
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    serviceCards.forEach { srv ->
+                        Card(
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            border = BorderStroke(1.dp, Color(0xFFE2E8F0)),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onNavigate(srv.route) }
+                        ) {
+                            Row(
                                 modifier = Modifier
-                                    .weight(1f)
-                                    .clickable { onNavigate(act.third) }
+                                    .fillMaxWidth()
+                                    .padding(14.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Row(
-                                    modifier = Modifier.padding(14.dp),
-                                    verticalAlignment = Alignment.CenterVertically
+                                Box(
+                                    modifier = Modifier
+                                        .size(46.dp)
+                                        .clip(RoundedCornerShape(12.dp))
+                                        .background(srv.bgColor),
+                                    contentAlignment = Alignment.Center
                                 ) {
-                                    Text(act.second.substring(0, 2), fontSize = 24.sp)
-                                    Spacer(modifier = Modifier.width(10.dp))
-                                    Column {
-                                        Text(act.first, fontSize = 13.sp, fontWeight = FontWeight.Bold, color = FarmerTextPrimary, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                                        Text(act.second.drop(2).trim(), fontSize = 10.sp, color = FarmerTextSecondary, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                                    }
+                                    Text(srv.icon, fontSize = 24.sp)
                                 }
+                                Spacer(modifier = Modifier.width(14.dp))
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = srv.title,
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = FarmerTextPrimary
+                                    )
+                                    Spacer(modifier = Modifier.height(2.dp))
+                                    Text(
+                                        text = srv.description,
+                                        fontSize = 12.sp,
+                                        color = FarmerTextSecondary,
+                                        lineHeight = 16.sp
+                                    )
+                                }
+                                Icon(
+                                    imageVector = Icons.Default.ChevronRight,
+                                    contentDescription = "Open ${srv.title}",
+                                    tint = FarmerSecondary,
+                                    modifier = Modifier.size(20.dp)
+                                )
                             }
                         }
                     }
@@ -888,7 +926,7 @@ fun FarmerDashboardMainView(
             }
         }
 
-        // RECENT ORDERS RECAP
+        // RECENT ACTIVITIES & ORDERS RECAP
         item {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -896,7 +934,7 @@ fun FarmerDashboardMainView(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Recent Orders & Deals",
+                    text = "Recent Activities & Orders",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = FarmerTextPrimary
@@ -906,7 +944,7 @@ fun FarmerDashboardMainView(
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     color = FarmerPrimary,
-                    modifier = Modifier.clickable { onNavigate("orders") }
+                    modifier = Modifier.clickable { onNavigate("activities") }
                 )
             }
 
@@ -916,7 +954,9 @@ fun FarmerDashboardMainView(
                         shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.cardColors(containerColor = Color.White),
                         border = BorderStroke(1.dp, Color(0xFFE2E8F0)),
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onNavigate("activities") }
                     ) {
                         Row(
                             modifier = Modifier.padding(14.dp),
@@ -958,6 +998,14 @@ fun FarmerDashboardMainView(
         }
     }
 }
+
+data class FarmerServiceItem(
+    val icon: String,
+    val title: String,
+    val description: String,
+    val route: String,
+    val bgColor: Color
+)
 
 // ------------------ 2. FARMER PROFILE ------------------
 @Composable
@@ -1147,12 +1195,14 @@ fun FarmerProfileView(
 @Composable
 fun MyCropsView(
     cropsList: MutableList<FarmerCrop>,
+    savedScans: List<SavedDiseaseScan> = emptyList(),
+    onCheckDisease: (String) -> Unit = {},
     onNavigateAdd: () -> Unit,
     onDeleteCrop: (String) -> Unit,
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
-    var editingCrop by remember { mutableStateOf<FarmerCrop?>(null) }
+    var selectedCropHistory by remember { mutableStateOf<Pair<String, List<SavedDiseaseScan>>?>(null) }
 
     Column(
         modifier = Modifier
@@ -1191,6 +1241,16 @@ fun MyCropsView(
             }
 
             items(cropsList) { crop ->
+                // Crop-specific scans matching this crop
+                val cropScans = savedScans.filter {
+                    it.cropName.contains(crop.name, ignoreCase = true) ||
+                    crop.name.contains(it.cropName, ignoreCase = true) ||
+                    (crop.name.contains("onion", ignoreCase = true) && it.cropName.contains("onion", ignoreCase = true)) ||
+                    (crop.name.contains("tomato", ignoreCase = true) && it.cropName.contains("tomato", ignoreCase = true)) ||
+                    (crop.name.contains("sugarcane", ignoreCase = true) && it.cropName.contains("sugarcane", ignoreCase = true)) ||
+                    (crop.name.contains("rice", ignoreCase = true) && it.cropName.contains("rice", ignoreCase = true))
+                }
+
                 Card(
                     shape = RoundedCornerShape(20.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -1220,6 +1280,38 @@ fun MyCropsView(
                             }
                         )
 
+                        // RECENT AI HEALTH BADGE IF SCANNED
+                        if (cropScans.isNotEmpty()) {
+                            val latestScan = cropScans.first()
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(if (latestScan.isHealthy) Color(0xFFE8F5E9) else Color(0xFFFFF3E0))
+                                    .padding(horizontal = 10.dp, vertical = 6.dp)
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Text(if (latestScan.isHealthy) "🌿" else "🤖", fontSize = 14.sp)
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Text(
+                                            "Latest: ${latestScan.diseaseName}",
+                                            fontSize = 11.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = if (latestScan.isHealthy) Color(0xFF2E7D32) else Color(0xFFC62828),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
+                                    Text("${latestScan.confidencePercent}% conf", fontSize = 10.sp, color = FarmerTextSecondary, fontWeight = FontWeight.Bold)
+                                }
+                            }
+                        }
+
                         Divider(color = Color(0xFFF1F5F9))
 
                         Row(
@@ -1233,10 +1325,139 @@ fun MyCropsView(
                         if (crop.description.isNotBlank()) {
                             Text("📝 ${crop.description}", fontSize = 11.sp, color = FarmerTextSecondary)
                         }
+
+                        // ACTIONS ROW: CHECK DISEASE & CROP-SPECIFIC HISTORY
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Button(
+                                onClick = { onCheckDisease(crop.name) },
+                                colors = ButtonDefaults.buttonColors(containerColor = FarmerPrimary),
+                                shape = RoundedCornerShape(10.dp),
+                                modifier = Modifier.weight(1.3f),
+                                contentPadding = PaddingValues(vertical = 8.dp)
+                            ) {
+                                Icon(Icons.Default.AutoAwesome, contentDescription = "Check Disease", tint = Color.White, modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text("Check Disease", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                            }
+
+                            OutlinedButton(
+                                onClick = {
+                                    val listToShow = if (cropScans.isNotEmpty()) cropScans else listOf(
+                                        SavedDiseaseScan(
+                                            id = "sample_hist_01",
+                                            cropName = crop.name,
+                                            diseaseName = "Early Crop Vigor Scan (Healthy)",
+                                            confidence = "High",
+                                            confidencePercent = 94,
+                                            isHealthy = true,
+                                            symptoms = listOf("Vibrant green leaves, robust venation"),
+                                            prevention = listOf("Maintain drip irrigation and balanced fertilization"),
+                                            recommendedAction = listOf("Routine visual checks once a week"),
+                                            formattedDate = "20 Aug 2026",
+                                            imageQuality = "good"
+                                        )
+                                    )
+                                    selectedCropHistory = crop.name to listToShow
+                                },
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = FarmerSecondary),
+                                border = BorderStroke(1.dp, Color(0xFFCBD5E1)),
+                                shape = RoundedCornerShape(10.dp),
+                                modifier = Modifier.weight(1.1f),
+                                contentPadding = PaddingValues(vertical = 8.dp)
+                            ) {
+                                Icon(Icons.Default.History, contentDescription = "History", modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text("Disease History", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                            }
+                        }
                     }
                 }
             }
         }
+    }
+
+    // CROP-SPECIFIC DISEASE HISTORY DIALOG (Section 12)
+    selectedCropHistory?.let { (cropName, scans) ->
+        AlertDialog(
+            onDismissRequest = { selectedCropHistory = null },
+            title = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text("📋 $cropName Disease History", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                        Text("${scans.size} previous diagnostic scans", fontSize = 11.sp, color = FarmerTextSecondary)
+                    }
+                }
+            },
+            text = {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    items(scans) { sc ->
+                        Card(
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(containerColor = if (sc.isHealthy) Color(0xFFF0FDF4) else Color(0xFFFFFBEB)),
+                            border = BorderStroke(1.dp, if (sc.isHealthy) Color(0xFFBBF7D0) else Color(0xFFFDE68A)),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = if (sc.isHealthy) "🌿 ${sc.diseaseName}" else "🦠 ${sc.diseaseName}",
+                                        fontSize = 13.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (sc.isHealthy) Color(0xFF15803D) else Color(0xFFB45309)
+                                    )
+                                    Text(
+                                        text = "${sc.confidencePercent}%",
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = FarmerPrimary
+                                    )
+                                }
+                                Text("📅 Date: ${sc.formattedDate}", fontSize = 11.sp, color = FarmerTextSecondary)
+                                if (sc.symptoms.isNotEmpty()) {
+                                    Text("🔍 Symptoms: ${sc.symptoms.first()}", fontSize = 11.sp, color = FarmerTextPrimary, maxLines = 2)
+                                }
+                                if (sc.recommendedAction.isNotEmpty()) {
+                                    Text("💡 Action: ${sc.recommendedAction.first()}", fontSize = 11.sp, color = Color(0xFF1B5E20), maxLines = 2)
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        selectedCropHistory = null
+                        onCheckDisease(cropName)
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = FarmerPrimary),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Icon(Icons.Default.CameraAlt, contentDescription = "Scan", tint = Color.White, modifier = Modifier.size(14.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("New Scan for $cropName", fontSize = 12.sp, color = Color.White)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { selectedCropHistory = null }) {
+                    Text("Close", color = FarmerTextSecondary)
+                }
+            }
+        )
     }
 }
 
@@ -1621,9 +1842,12 @@ object SampleLeafGenerator {
 // ------------------ 4. AI CROP DISEASE DETECTION ------------------
 @Composable
 fun AiCropDiseaseDetectionView(
+    initialCrop: String = "Tomato",
+    myCrops: List<FarmerCrop> = emptyList(),
     savedScans: SnapshotStateList<SavedDiseaseScan>,
     onSaveScan: (SavedDiseaseScan) -> Unit,
     onNavigateStore: (String) -> Unit,
+    onNavigateMyCrops: () -> Unit = {},
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -1648,12 +1872,13 @@ fun AiCropDiseaseDetectionView(
         "Grapes" to "🍇"
     )
 
-    var selectedCrop by remember { mutableStateOf("Tomato") }
+    var selectedCrop by remember(initialCrop) { mutableStateOf(initialCrop.ifBlank { "Tomato" }) }
     var showCropDropdown by remember { mutableStateOf(false) }
 
     // Selected / Captured Image Bitmap
     var currentImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
     var showImageSourceModal by remember { mutableStateOf(false) }
+    var showKisanHelplineModal by remember { mutableStateOf(false) }
 
     // Analysis State
     var isAnalyzing by remember { mutableStateOf(false) }
@@ -1861,6 +2086,35 @@ fun AiCropDiseaseDetectionView(
                                 }
                             }
 
+                            // My Farm Crops Quick Shortcuts (if farmer has listed crops)
+                            if (myCrops.isNotEmpty()) {
+                                Spacer(modifier = Modifier.height(10.dp))
+                                Text("🌱 Your Farm Crops:", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = FarmerPrimary)
+                                Spacer(modifier = Modifier.height(4.dp))
+                                LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    items(myCrops) { farmCrop ->
+                                        val isSelected = selectedCrop.equals(farmCrop.name, ignoreCase = true)
+                                        FilterChip(
+                                            selected = isSelected,
+                                            onClick = { selectedCrop = farmCrop.name },
+                                            label = { Text("🌾 ${farmCrop.name}", fontSize = 11.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal) },
+                                            colors = FilterChipDefaults.filterChipColors(
+                                                selectedContainerColor = FarmerPrimary,
+                                                selectedLabelColor = Color.White,
+                                                containerColor = Color(0xFFF0FDF4),
+                                                labelColor = FarmerPrimary
+                                            ),
+                                            border = FilterChipDefaults.filterChipBorder(
+                                                enabled = true,
+                                                selected = isSelected,
+                                                borderColor = FarmerPrimary
+                                            ),
+                                            shape = RoundedCornerShape(8.dp)
+                                        )
+                                    }
+                                }
+                            }
+
                             Spacer(modifier = Modifier.height(10.dp))
 
                             // Horizontal Quick Selection Chips
@@ -1885,7 +2139,125 @@ fun AiCropDiseaseDetectionView(
                     }
                 }
 
-                // 2. IMAGE UPLOAD & PREVIEW SECTION
+                // 2. QUICK TEST SAMPLE PHOTOS (For immediate testing)
+                item {
+                    Card(
+                        shape = RoundedCornerShape(18.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFFF8FAFC)),
+                        border = BorderStroke(1.dp, Color(0xFFE2E8F0)),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(modifier = Modifier.padding(14.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(Icons.Default.AutoAwesome, contentDescription = "Samples", tint = FarmerPrimary, modifier = Modifier.size(16.dp))
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text("⚡ Quick Test Leaf Samples", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = FarmerTextPrimary)
+                                }
+                                Text("Tap to load sample", fontSize = 11.sp, color = FarmerMuted)
+                            }
+                            Spacer(modifier = Modifier.height(8.dp))
+                            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                item {
+                                    OutlinedButton(
+                                        onClick = {
+                                            selectedCrop = "Tomato"
+                                            currentImageBitmap = SampleLeafGenerator.createSampleLeafBitmap("Tomato")
+                                            analysisResult = null
+                                            analysisSaved = false
+                                        },
+                                        shape = RoundedCornerShape(10.dp),
+                                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
+                                        border = BorderStroke(1.dp, Color(0xFFEF5350))
+                                    ) {
+                                        Text("🍅 Tomato Early Blight", fontSize = 11.sp, color = Color(0xFFC62828), fontWeight = FontWeight.Bold)
+                                    }
+                                }
+                                item {
+                                    OutlinedButton(
+                                        onClick = {
+                                            selectedCrop = "Pune Red Onion"
+                                            currentImageBitmap = SampleLeafGenerator.createSampleLeafBitmap("Onion")
+                                            analysisResult = null
+                                            analysisSaved = false
+                                        },
+                                        shape = RoundedCornerShape(10.dp),
+                                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
+                                        border = BorderStroke(1.dp, Color(0xFFAB47BC))
+                                    ) {
+                                        Text("🧅 Onion Purple Blotch", fontSize = 11.sp, color = Color(0xFF6A1B9A), fontWeight = FontWeight.Bold)
+                                    }
+                                }
+                                item {
+                                    OutlinedButton(
+                                        onClick = {
+                                            selectedCrop = "Potato"
+                                            currentImageBitmap = SampleLeafGenerator.createSampleLeafBitmap("Potato")
+                                            analysisResult = null
+                                            analysisSaved = false
+                                        },
+                                        shape = RoundedCornerShape(10.dp),
+                                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
+                                        border = BorderStroke(1.dp, Color(0xFF8D6E63))
+                                    ) {
+                                        Text("🥔 Potato Late Blight", fontSize = 11.sp, color = Color(0xFF4E342E), fontWeight = FontWeight.Bold)
+                                    }
+                                }
+                                item {
+                                    OutlinedButton(
+                                        onClick = {
+                                            selectedCrop = "Cotton"
+                                            currentImageBitmap = SampleLeafGenerator.createSampleLeafBitmap("Cotton")
+                                            analysisResult = null
+                                            analysisSaved = false
+                                        },
+                                        shape = RoundedCornerShape(10.dp),
+                                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
+                                        border = BorderStroke(1.dp, Color(0xFF26A69A))
+                                    ) {
+                                        Text("☁️ Cotton Leaf Spot", fontSize = 11.sp, color = Color(0xFF00695C), fontWeight = FontWeight.Bold)
+                                    }
+                                }
+                                item {
+                                    OutlinedButton(
+                                        onClick = {
+                                            selectedCrop = "Tomato"
+                                            currentImageBitmap = SampleLeafGenerator.createSampleLeafBitmap("Healthy")
+                                            analysisResult = null
+                                            analysisSaved = false
+                                        },
+                                        shape = RoundedCornerShape(10.dp),
+                                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
+                                        border = BorderStroke(1.dp, Color(0xFF66BB6A))
+                                    ) {
+                                        Text("🌿 Healthy Leaf", fontSize = 11.sp, color = Color(0xFF2E7D32), fontWeight = FontWeight.Bold)
+                                    }
+                                }
+                                item {
+                                    OutlinedButton(
+                                        onClick = {
+                                            selectedCrop = "Tomato"
+                                            currentImageBitmap = SampleLeafGenerator.createSampleLeafBitmap("Blurry")
+                                            analysisResult = null
+                                            analysisSaved = false
+                                        },
+                                        shape = RoundedCornerShape(10.dp),
+                                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
+                                        border = BorderStroke(1.dp, Color(0xFFFFA726))
+                                    ) {
+                                        Text("🌫️ Blurry / Low Quality", fontSize = 11.sp, color = Color(0xFFE65100), fontWeight = FontWeight.Bold)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // 3. IMAGE UPLOAD & PREVIEW SECTION
                 item {
                     Card(
                         shape = RoundedCornerShape(20.dp),
@@ -2022,9 +2394,9 @@ fun AiCropDiseaseDetectionView(
                                                     modifier = Modifier.size(40.dp)
                                                 )
                                                 Spacer(modifier = Modifier.height(12.dp))
-                                                Text("🌿 Gemini AI is analyzing your crop...", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                                                Text("🌿 AI is analyzing your crop...", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                                                 Spacer(modifier = Modifier.height(4.dp))
-                                                Text("Sending image to Gemini Vision Model", color = Color(0xFFE0E0E0), fontSize = 11.sp, textAlign = TextAlign.Center)
+                                                Text("Identifying leaf patterns and disease signatures", color = Color(0xFFE0E0E0), fontSize = 11.sp, textAlign = TextAlign.Center)
                                             }
                                         }
                                     }
@@ -2114,7 +2486,7 @@ fun AiCropDiseaseDetectionView(
                     }
                 }
 
-                // 3. AI ANALYSIS RESULT DISPLAY
+                // 4. AI ANALYSIS RESULT DISPLAY
                 analysisResult?.let { result ->
                     item {
                         if (!result.isSuccess) {
@@ -2206,15 +2578,140 @@ fun AiCropDiseaseDetectionView(
                                     Text("• Avoid dark shadows, strong back-glare, or motion blur.", fontSize = 11.sp, color = FarmerTextSecondary)
                                     Text("• Focus directly on the discolored spot or affected foliage.", fontSize = 11.sp, color = FarmerTextSecondary)
 
-                                    Button(
-                                        onClick = { showImageSourceModal = true },
-                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD84315)),
-                                        shape = RoundedCornerShape(12.dp),
-                                        modifier = Modifier.fillMaxWidth()
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                                     ) {
-                                        Icon(Icons.Default.AddAPhoto, contentDescription = "Upload Another")
-                                        Spacer(modifier = Modifier.width(6.dp))
-                                        Text("Upload Another Photo", fontWeight = FontWeight.Bold, color = Color.White)
+                                        OutlinedButton(
+                                            onClick = { launchCameraSafely() },
+                                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFD84315)),
+                                            border = BorderStroke(1.dp, Color(0xFFD84315)),
+                                            shape = RoundedCornerShape(12.dp),
+                                            modifier = Modifier.weight(1f)
+                                        ) {
+                                            Icon(Icons.Default.CameraAlt, contentDescription = "Camera", modifier = Modifier.size(16.dp))
+                                            Spacer(modifier = Modifier.width(4.dp))
+                                            Text("Take Photo", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                        }
+
+                                        Button(
+                                            onClick = { showImageSourceModal = true },
+                                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD84315)),
+                                            shape = RoundedCornerShape(12.dp),
+                                            modifier = Modifier.weight(1f)
+                                        ) {
+                                            Icon(Icons.Default.AddAPhoto, contentDescription = "Upload Another", modifier = Modifier.size(16.dp))
+                                            Spacer(modifier = Modifier.width(4.dp))
+                                            Text("Upload Another", fontWeight = FontWeight.Bold, color = Color.White, fontSize = 12.sp)
+                                        }
+                                    }
+                                }
+                            }
+                        } else if (result.isHealthy) {
+                            // HEALTHY CROP SPECIAL CARD
+                            Card(
+                                shape = RoundedCornerShape(20.dp),
+                                colors = CardDefaults.cardColors(containerColor = Color(0xFFF0FDF4)),
+                                border = BorderStroke(1.5.dp, Color(0xFF22C55E)),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Column(
+                                    modifier = Modifier.padding(18.dp),
+                                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                                ) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Icon(Icons.Default.CheckCircle, contentDescription = "Healthy", tint = Color(0xFF16A34A), modifier = Modifier.size(28.dp))
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Column {
+                                                Text("🌿 Crop Health: Healthy", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color(0xFF15803D))
+                                                Text("Target: ${result.crop}", fontSize = 12.sp, color = Color(0xFF166534))
+                                            }
+                                        }
+
+                                        Box(
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(8.dp))
+                                                .background(Color(0xFFDCFCE7))
+                                                .border(1.dp, Color(0xFF86EFAC), RoundedCornerShape(8.dp))
+                                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                                        ) {
+                                            Text("High Confidence", color = Color(0xFF15803D), fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                        }
+                                    }
+
+                                    Text(
+                                        "No obvious disease was detected in this image.",
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFF14532D)
+                                    )
+
+                                    Text(
+                                        "The foliage exhibits healthy green coloration, vigorous cell structure, and no visible fungal or bacterial lesions.",
+                                        fontSize = 12.sp,
+                                        color = Color(0xFF166534),
+                                        lineHeight = 17.sp
+                                    )
+
+                                    Divider(color = Color(0xFFBBF7D0))
+
+                                    Text("🌱 Maintenance & Agronomy Tips:", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color(0xFF15803D))
+                                    result.prevention.forEach { tip ->
+                                        Row(modifier = Modifier.padding(vertical = 1.dp), verticalAlignment = Alignment.Top) {
+                                            Text("• ", color = Color(0xFF16A34A), fontWeight = FontWeight.Bold)
+                                            Text(tip, fontSize = 12.sp, color = Color(0xFF14532D), lineHeight = 16.sp)
+                                        }
+                                    }
+
+                                    // MANDATORY WARNING BANNER
+                                    Card(
+                                        shape = RoundedCornerShape(10.dp),
+                                        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFBEB)),
+                                        border = BorderStroke(1.dp, Color(0xFFFDE68A))
+                                    ) {
+                                        Row(modifier = Modifier.padding(10.dp), verticalAlignment = Alignment.Top) {
+                                            Icon(Icons.Default.Info, contentDescription = "Warning", tint = Color(0xFFD97706), modifier = Modifier.size(16.dp))
+                                            Spacer(modifier = Modifier.width(6.dp))
+                                            Text(
+                                                "“AI-generated agricultural assessment. Continue periodic visual inspection of your field.”",
+                                                fontSize = 11.sp,
+                                                color = Color(0xFF92400E),
+                                                fontWeight = FontWeight.Medium,
+                                                lineHeight = 15.sp
+                                            )
+                                        }
+                                    }
+
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        OutlinedButton(
+                                            onClick = onNavigateMyCrops,
+                                            modifier = Modifier.weight(1f),
+                                            shape = RoundedCornerShape(12.dp),
+                                            colors = ButtonDefaults.outlinedButtonColors(contentColor = FarmerPrimary),
+                                            border = BorderStroke(1.dp, FarmerPrimary)
+                                        ) {
+                                            Text("View My Crops", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                        }
+
+                                        Button(
+                                            onClick = {
+                                                currentImageBitmap = null
+                                                analysisResult = null
+                                            },
+                                            colors = ButtonDefaults.buttonColors(containerColor = FarmerPrimary),
+                                            shape = RoundedCornerShape(12.dp),
+                                            modifier = Modifier.weight(1f)
+                                        ) {
+                                            Text("Scan Another Crop", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                                        }
                                     }
                                 }
                             }
@@ -2246,7 +2743,7 @@ fun AiCropDiseaseDetectionView(
                                                         .background(Color(0xFFE8F5E9))
                                                         .padding(horizontal = 6.dp, vertical = 2.dp)
                                                 ) {
-                                                    Text("gemini-3.5-flash", fontSize = 9.sp, color = FarmerPrimary, fontWeight = FontWeight.SemiBold)
+                                                    Text(result.modelName, fontSize = 9.sp, color = FarmerPrimary, fontWeight = FontWeight.SemiBold)
                                                 }
                                             }
                                             Spacer(modifier = Modifier.height(2.dp))
@@ -2424,7 +2921,7 @@ fun AiCropDiseaseDetectionView(
                                         }
                                     }
 
-                                    // Save / Action Row
+                                    // Primary Action Buttons
                                     Row(
                                         modifier = Modifier.fillMaxWidth(),
                                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -2470,6 +2967,36 @@ fun AiCropDiseaseDetectionView(
                                             Icon(Icons.Default.ShoppingBag, contentDescription = "Buy", tint = Color.White, modifier = Modifier.size(16.dp))
                                             Spacer(modifier = Modifier.width(4.dp))
                                             Text("Agri Store Remedies", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                                        }
+                                    }
+
+                                    // Secondary Actions: Contact Helpline / View My Crops
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        OutlinedButton(
+                                            onClick = onNavigateMyCrops,
+                                            modifier = Modifier.weight(1f),
+                                            shape = RoundedCornerShape(10.dp),
+                                            colors = ButtonDefaults.outlinedButtonColors(contentColor = FarmerTextSecondary),
+                                            border = BorderStroke(1.dp, Color(0xFFCBD5E1))
+                                        ) {
+                                            Icon(Icons.Default.Eco, contentDescription = "My Crops", modifier = Modifier.size(14.dp), tint = FarmerPrimary)
+                                            Spacer(modifier = Modifier.width(4.dp))
+                                            Text("View My Crops", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                        }
+
+                                        OutlinedButton(
+                                            onClick = { showKisanHelplineModal = true },
+                                            modifier = Modifier.weight(1.2f),
+                                            shape = RoundedCornerShape(10.dp),
+                                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF15803D)),
+                                            border = BorderStroke(1.dp, Color(0xFF86EFAC))
+                                        ) {
+                                            Icon(Icons.Default.Phone, contentDescription = "Call", modifier = Modifier.size(14.dp), tint = Color(0xFF15803D))
+                                            Spacer(modifier = Modifier.width(4.dp))
+                                            Text("Kisan Helpline 📞", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF15803D))
                                         }
                                     }
                                 }
@@ -2610,12 +3137,12 @@ fun AiCropDiseaseDetectionView(
                                         "🦠 ${scan.diseaseName}",
                                         fontSize = 13.sp,
                                         fontWeight = FontWeight.SemiBold,
-                                        color = Color(0xFFD32F2F),
+                                        color = if (scan.isHealthy) Color(0xFF15803D) else Color(0xFFD32F2F),
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
 
-                                    if (scan.severity.isNotBlank() && scan.severity != "Unknown") {
+                                    if (scan.severity.isNotBlank() && scan.severity != "Unknown" && !scan.isHealthy) {
                                         Text(
                                             "⚠️ Severity: ${scan.severity}",
                                             fontSize = 11.sp,
@@ -2644,6 +3171,71 @@ fun AiCropDiseaseDetectionView(
                 }
             }
         }
+    }
+
+    // KISAN CALL CENTER / HELPLINE DIALOG
+    if (showKisanHelplineModal) {
+        AlertDialog(
+            onDismissRequest = { showKisanHelplineModal = false },
+            title = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.SupportAgent, contentDescription = "Support", tint = FarmerPrimary, modifier = Modifier.size(26.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Kisan Call Center & Expert Support", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                }
+            },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(
+                        "Government of India Kisan Call Center (KCC) provides free, expert agricultural guidance in your local language.",
+                        fontSize = 12.sp,
+                        color = FarmerTextSecondary,
+                        lineHeight = 17.sp
+                    )
+
+                    Card(
+                        shape = RoundedCornerShape(12.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFFF0FDF4)),
+                        border = BorderStroke(1.dp, Color(0xFF86EFAC))
+                    ) {
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            Text("📞 Toll-Free Helpline:", fontSize = 11.sp, color = FarmerTextSecondary)
+                            Text("1800-180-1551", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color(0xFF15803D))
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text("⏰ Available: 6:00 AM to 10:00 PM (All 7 Days)", fontSize = 11.sp, color = FarmerTextSecondary)
+                            Text("🗣️ Languages: Marathi, Hindi, English, Gujarati & Regional", fontSize = 11.sp, color = FarmerTextSecondary)
+                        }
+                    }
+
+                    Button(
+                        onClick = {
+                            try {
+                                val dialIntent = android.content.Intent(android.content.Intent.ACTION_DIAL).apply {
+                                    data = Uri.parse("tel:18001801551")
+                                }
+                                context.startActivity(dialIntent)
+                            } catch (e: Exception) {
+                                Toast.makeText(context, "Dialer unavailable. Dial 1800-180-1551", Toast.LENGTH_LONG).show()
+                            }
+                            showKisanHelplineModal = false
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF15803D)),
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Default.Call, contentDescription = "Call Now", tint = Color.White)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Call 1800-180-1551 Now", color = Color.White, fontWeight = FontWeight.Bold)
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { showKisanHelplineModal = false }) {
+                    Text("Close", color = FarmerTextSecondary)
+                }
+            }
+        )
     }
 
     // IMAGE SOURCE SELECTION MODAL
@@ -3116,62 +3708,449 @@ fun DirectCustomerSellingView(
     }
 }
 
-// ------------------ 11. UNIFIED ORDERS ------------------
+// ------------------ 11. CENTRALIZED FARMER ACTIVITIES ------------------
 @Composable
-fun UnifiedOrdersView(
+fun FarmerActivitiesView(
     orders: List<UnifiedOrder>,
+    contracts: List<ContractFarming>,
+    brokerDemands: List<BrokerDemand>,
+    produceList: List<DirectProduceListing>,
+    onNavigate: (String) -> Unit,
     onBack: () -> Unit
 ) {
-    var filterCat by remember { mutableStateOf("All") }
+    var selectedStatusTab by remember { mutableStateOf("All") }
+    var selectedCategory by remember { mutableStateOf("All") }
+
+    val statusTabs = listOf("All", "Active", "Pending", "Completed")
+    val categoryChips = listOf(
+        "All" to "All Categories",
+        "Labour" to "👨‍🌾 Labour Jobs",
+        "Waste" to "♻️ Waste Sales",
+        "Produce" to "🛒 Produce Orders",
+        "Products" to "🏪 Product Orders",
+        "Contracts" to "🤝 Contracts",
+        "Broker" to "📈 Broker Deals"
+    )
+
+    val labourReqs = AgroWorldLabourRepository.requirements
+    val wasteOrders = AgriWasteDataHub.orders
+    val wasteListings = AgriWasteDataHub.listings
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(FarmerBackground)
     ) {
-        TopAppBarHeader("Orders & Deliveries", onBack)
+        TopAppBarHeader("📦 My Activities", onBack)
 
+        // STATUS TABS (All / Active / Pending / Completed)
+        TabRow(
+            selectedTabIndex = statusTabs.indexOf(selectedStatusTab),
+            containerColor = Color.White,
+            contentColor = FarmerPrimary,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            statusTabs.forEachIndexed { index, tabName ->
+                Tab(
+                    selected = selectedStatusTab == tabName,
+                    onClick = { selectedStatusTab = tabName },
+                    text = {
+                        Text(
+                            text = tabName,
+                            fontWeight = if (selectedStatusTab == tabName) FontWeight.Bold else FontWeight.Medium,
+                            fontSize = 13.sp
+                        )
+                    }
+                )
+            }
+        }
+
+        // CATEGORY FILTER CHIPS
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(categoryChips) { (key, label) ->
+                FilterChip(
+                    selected = selectedCategory == key,
+                    onClick = { selectedCategory = key },
+                    label = { Text(label, fontSize = 12.sp) },
+                    colors = FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = FarmerPrimary,
+                        selectedLabelColor = Color.White,
+                        containerColor = Color.White
+                    ),
+                    border = FilterChipDefaults.filterChipBorder(
+                        enabled = true,
+                        selected = selectedCategory == key,
+                        borderColor = if (selectedCategory == key) FarmerPrimary else Color(0xFFE2E8F0)
+                    )
+                )
+            }
+        }
+
+        // ACTIVITY FEED
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp),
-            contentPadding = PaddingValues(bottom = 24.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(bottom = 32.dp)
         ) {
-            item {
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf("All", "Product", "Produce", "Waste").forEach { cat ->
-                        FilterChip(
-                            selected = filterCat == cat,
-                            onClick = { filterCat = cat },
-                            label = { Text(cat) },
-                            colors = FilterChipDefaults.filterChipColors(selectedContainerColor = FarmerPrimary, selectedLabelColor = Color.White)
-                        )
+            // 1. LABOUR JOBS
+            if (selectedCategory == "All" || selectedCategory == "Labour") {
+                val filteredLabour = labourReqs.filter { req ->
+                    when (selectedStatusTab) {
+                        "Active" -> req.status == "Active - Scheduled" || req.status == "In Progress" || req.status == "Open"
+                        "Pending" -> req.status == "Pending Acceptance" || req.status == "Workers Assigned"
+                        "Completed" -> req.status == "Completed"
+                        else -> true
+                    }
+                }
+
+                if (filteredLabour.isNotEmpty()) {
+                    item {
+                        Text("👨‍🌾 Labour Hiring Requirements", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = FarmerTextPrimary)
+                    }
+                    items(filteredLabour) { req ->
+                        Card(
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            border = BorderStroke(1.dp, Color(0xFFE2E8F0)),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text("${req.workType} • ${req.crop}", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = FarmerTextPrimary)
+                                    ActivityStatusPill(req.status)
+                                }
+                                Text("Requirement ID: ${req.id} • ${req.village}, ${req.taluka}", fontSize = 12.sp, color = FarmerTextSecondary)
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text("Workers: ${req.workerIdsAccepted.size} / ${req.workersRequired} Filled", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = FarmerPrimary)
+                                    Text("Wage: ₹${req.wageAmount.toInt()} (${req.wageType})", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = FarmerTextPrimary)
+                                }
+                                Text("Work Period: ${req.startDate} to ${req.endDate} (${req.startTime})", fontSize = 11.sp, color = FarmerTextSecondary)
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.End
+                                ) {
+                                    OutlinedButton(
+                                        onClick = { onNavigate("hire_labour") },
+                                        shape = RoundedCornerShape(8.dp),
+                                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                                    ) {
+                                        Text("Open Labour Hub ➔", fontSize = 12.sp, color = FarmerPrimary, fontWeight = FontWeight.Bold)
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
 
-            val filtered = if (filterCat == "All") orders else orders.filter { it.orderType == filterCat }
+            // 2. AGRI WASTE SALES & LISTINGS
+            if (selectedCategory == "All" || selectedCategory == "Waste") {
+                val filteredWasteOrders = wasteOrders.filter { ord ->
+                    when (selectedStatusTab) {
+                        "Active" -> ord.status == "Farmer Accepted" || ord.status == "Order Placed" || ord.status == "Pickup Scheduled"
+                        "Pending" -> ord.status == "Waiting for Farmer" || ord.status == "Purchase Request"
+                        "Completed" -> ord.status == "Completed" || ord.status == "Delivered"
+                        else -> true
+                    }
+                }
 
-            items(filtered) { ord ->
-                Card(
-                    shape = RoundedCornerShape(18.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                    border = BorderStroke(1.dp, Color(0xFFE2E8F0)),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text(ord.itemTitle, fontSize = 15.sp, fontWeight = FontWeight.Bold, color = FarmerTextPrimary)
-                            Text(ord.status, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = FarmerPrimary)
+                if (filteredWasteOrders.isNotEmpty()) {
+                    item {
+                        Text("♻️ Agri Waste Purchase Requests & Orders", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = FarmerTextPrimary)
+                    }
+                    items(filteredWasteOrders) { ord ->
+                        Card(
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            border = BorderStroke(1.dp, Color(0xFFE2E8F0)),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(ord.wasteName, fontSize = 15.sp, fontWeight = FontWeight.Bold, color = FarmerTextPrimary)
+                                    ActivityStatusPill(ord.status)
+                                }
+                                Text("Buyer: ${ord.buyerName} (${ord.buyerPhone})", fontSize = 12.sp, color = FarmerTextSecondary)
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text("Qty: ${ord.quantity} ${ord.unit}", fontSize = 12.sp, color = FarmerTextSecondary)
+                                    Text("Total: ₹${ord.totalAmount.toInt()}", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = FarmerPrimary)
+                                }
+                                Text("Collection: ${ord.pickupMethod} • Date: ${ord.orderDate}", fontSize = 11.sp, color = FarmerTextSecondary)
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.End
+                                ) {
+                                    OutlinedButton(
+                                        onClick = { onNavigate("agri_waste") },
+                                        shape = RoundedCornerShape(8.dp),
+                                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                                    ) {
+                                        Text("Manage Waste Sales ➔", fontSize = 12.sp, color = FarmerPrimary, fontWeight = FontWeight.Bold)
+                                    }
+                                }
+                            }
                         }
-                        Text("Type: ${ord.orderType} • ${ord.counterpartyName}", fontSize = 12.sp, color = FarmerTextSecondary)
-                        Text("Total: ₹${ord.totalPrice.toInt()} • Date: ${ord.date}", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = FarmerAccent)
-                        Text("Delivery Address: ${ord.address}", fontSize = 11.sp, color = FarmerTextSecondary)
+                    }
+                }
+            }
+
+            // 3. DIRECT CUSTOMER PRODUCE
+            if (selectedCategory == "All" || selectedCategory == "Produce") {
+                val filteredProduce = produceList.filter { p ->
+                    when (selectedStatusTab) {
+                        "Active" -> p.status == "Active"
+                        "Pending" -> p.status == "Under Review"
+                        "Completed" -> p.status == "Sold Out"
+                        else -> true
+                    }
+                }
+
+                if (filteredProduce.isNotEmpty()) {
+                    item {
+                        Text("🛒 Direct Customer Produce Listings", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = FarmerTextPrimary)
+                    }
+                    items(filteredProduce) { item ->
+                        Card(
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            border = BorderStroke(1.dp, Color(0xFFE2E8F0)),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(item.produceName, fontSize = 15.sp, fontWeight = FontWeight.Bold, color = FarmerTextPrimary)
+                                    ActivityStatusPill(item.status)
+                                }
+                                Text("Available: ${item.quantityAvailable} ${item.unit} • Grade: ${item.qualityGrade}", fontSize = 12.sp, color = FarmerTextSecondary)
+                                Text("Price: ₹${item.pricePerKg.toInt()}/kg • Harvest: ${item.harvestDate}", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = FarmerPrimary)
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.End
+                                ) {
+                                    OutlinedButton(
+                                        onClick = { onNavigate("direct_selling") },
+                                        shape = RoundedCornerShape(8.dp),
+                                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                                    ) {
+                                        Text("Direct Selling Hub ➔", fontSize = 12.sp, color = FarmerPrimary, fontWeight = FontWeight.Bold)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 4. AGRI STORE PRODUCT PURCHASES
+            if (selectedCategory == "All" || selectedCategory == "Products") {
+                val storeOrders = orders.filter { it.orderType == "Product" }.filter { ord ->
+                    when (selectedStatusTab) {
+                        "Active" -> ord.status == "Confirmed" || ord.status == "Dispatched"
+                        "Pending" -> ord.status == "Pending"
+                        "Completed" -> ord.status == "Delivered"
+                        else -> true
+                    }
+                }
+
+                if (storeOrders.isNotEmpty()) {
+                    item {
+                        Text("🏪 Farming Products & Inputs Orders", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = FarmerTextPrimary)
+                    }
+                    items(storeOrders) { ord ->
+                        Card(
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            border = BorderStroke(1.dp, Color(0xFFE2E8F0)),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(ord.itemTitle, fontSize = 15.sp, fontWeight = FontWeight.Bold, color = FarmerTextPrimary)
+                                    ActivityStatusPill(ord.status)
+                                }
+                                Text("Seller: ${ord.counterpartyName} • ${ord.quantity}", fontSize = 12.sp, color = FarmerTextSecondary)
+                                Text("Total: ₹${ord.totalPrice.toInt()} • Ordered on: ${ord.date}", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = FarmerPrimary)
+                                Text("Delivery Address: ${ord.address}", fontSize = 11.sp, color = FarmerTextSecondary)
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.End
+                                ) {
+                                    OutlinedButton(
+                                        onClick = { onNavigate("agri_store") },
+                                        shape = RoundedCornerShape(8.dp),
+                                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                                    ) {
+                                        Text("Agri Store ➔", fontSize = 12.sp, color = FarmerPrimary, fontWeight = FontWeight.Bold)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 5. CONTRACT FARMING APPLICATIONS
+            if (selectedCategory == "All" || selectedCategory == "Contracts") {
+                val filteredContracts = contracts.filter { c ->
+                    when (selectedStatusTab) {
+                        "Active" -> c.status == "Approved" || c.status == "Ongoing"
+                        "Pending" -> c.status == "Applied" || c.status == "Open"
+                        "Completed" -> c.status == "Fulfilled" || c.status == "Closed"
+                        else -> true
+                    }
+                }
+
+                if (filteredContracts.isNotEmpty()) {
+                    item {
+                        Text("🤝 Contract Farming Opportunities & Applications", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = FarmerTextPrimary)
+                    }
+                    items(filteredContracts) { c ->
+                        Card(
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            border = BorderStroke(1.dp, Color(0xFFE2E8F0)),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text("${c.companyName} • ${c.cropName}", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = FarmerTextPrimary)
+                                    ActivityStatusPill(c.status)
+                                }
+                                Text("Required Qty: ${c.requiredQuantity} • Cluster: ${c.location}", fontSize = 12.sp, color = FarmerTextSecondary)
+                                Text("Offered Price: ₹${c.offeredPrice.toInt()}/Ton • Period: ${c.harvestPeriod}", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = FarmerPrimary)
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.End
+                                ) {
+                                    OutlinedButton(
+                                        onClick = { onNavigate("contract_farming") },
+                                        shape = RoundedCornerShape(8.dp),
+                                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                                    ) {
+                                        Text("View Contracts ➔", fontSize = 12.sp, color = FarmerPrimary, fontWeight = FontWeight.Bold)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 6. BROKER WHOLESALE DEALS
+            if (selectedCategory == "All" || selectedCategory == "Broker") {
+                val filteredBrokers = brokerDemands.filter { b ->
+                    when (selectedStatusTab) {
+                        "Active" -> b.dealStatus == "Deal Agreed" || b.dealStatus == "In Progress"
+                        "Pending" -> b.dealStatus == "Active Demand"
+                        "Completed" -> b.dealStatus == "Completed"
+                        else -> true
+                    }
+                }
+
+                if (filteredBrokers.isNotEmpty()) {
+                    item {
+                        Text("📈 Broker Wholesale Demands & Deals", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = FarmerTextPrimary)
+                    }
+                    items(filteredBrokers) { b ->
+                        Card(
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            border = BorderStroke(1.dp, Color(0xFFE2E8F0)),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text("${b.brokerName} (${b.companyName})", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = FarmerTextPrimary)
+                                    ActivityStatusPill(b.dealStatus)
+                                }
+                                Text("Crop Demanded: ${b.cropDemanded} • ${b.requiredQty}", fontSize = 12.sp, color = FarmerTextSecondary)
+                                Text("Offered Price: ₹${b.offeredPricePerQuintal.toInt()}/Quintal • ${b.location}", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = FarmerPrimary)
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.End
+                                ) {
+                                    OutlinedButton(
+                                        onClick = { onNavigate("broker_trading") },
+                                        shape = RoundedCornerShape(8.dp),
+                                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                                    ) {
+                                        Text("Broker Hub ➔", fontSize = 12.sp, color = FarmerPrimary, fontWeight = FontWeight.Bold)
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun ActivityStatusPill(status: String) {
+    val (bgColor, textColor) = when (status) {
+        "Confirmed", "Delivered", "Completed", "Approved", "Deal Agreed", "Active - Scheduled" -> Pair(Color(0xFFE8F5E9), Color(0xFF2E7D32))
+        "Pending", "Waiting for Farmer", "Pending Acceptance", "Applied", "Active Demand", "Purchase Request", "Workers Assigned" -> Pair(Color(0xFFFFF8E1), Color(0xFFB78103))
+        "Active", "In Progress", "Ongoing", "Open" -> Pair(Color(0xFFE0F2FE), Color(0xFF0284C7))
+        else -> Pair(Color(0xFFF1F5F9), Color(0xFF475569))
+    }
+
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(8.dp))
+            .background(bgColor)
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+    ) {
+        Text(
+            text = status,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Bold,
+            color = textColor
+        )
     }
 }
 
@@ -3241,12 +4220,13 @@ fun TopAppBarHeader(title: String, onBack: () -> Unit) {
 fun QuickAddSheetDialog(
     onDismiss: () -> Unit,
     onSelectAddCrop: () -> Unit,
+    onSelectPostLabour: () -> Unit,
     onSelectAddWaste: () -> Unit,
     onSelectAddProduce: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("What would you like to list?", fontWeight = FontWeight.Bold, fontSize = 18.sp) },
+        title = { Text("What would you like to add or post?", fontWeight = FontWeight.Bold, fontSize = 18.sp) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Button(
@@ -3255,6 +4235,13 @@ fun QuickAddSheetDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("🌱 Add New Crop Listing", color = Color.White)
+                }
+                Button(
+                    onClick = onSelectPostLabour,
+                    colors = ButtonDefaults.buttonColors(containerColor = FarmerPrimary),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("👨‍🌾 Post Labour Requirement", color = Color.White)
                 }
                 Button(
                     onClick = onSelectAddWaste,

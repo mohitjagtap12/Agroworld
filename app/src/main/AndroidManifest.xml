@@ -26,6 +26,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.farmer.FarmerContainerActivity"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AgroWorld" />
     </application>
 
 </manifest>

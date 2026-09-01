@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12.dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="16.dp"
+    app:cardElevation="2.dp"
+    app:strokeColor="#E2E8F0"
+    app:strokeWidth="1.dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16.dp">
+
+        <!-- Top Row: Emoji, Title, Status Badge -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvAppCropEmoji"
+                android:layout_width="42.dp"
+                android:layout_height="42.dp"
+                android:background="#E8F5E9"
+                android:gravity="center"
+                android:text="🤝"
+                android:textSize="20.sp" />
+
+            <LinearLayout
+                android:layout_width="0.dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12.dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvAppCropTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#212121"
+                    android:textSize="15.sp"
+                    android:textStyle="bold"
+                    tools:text="Pune Red Onions Contract" />
+
+                <TextView
+                    android:id="@+id/tvAppCounterparty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#616161"
+                    android:textSize="12.sp"
+                    tools:text="Company: Sahyadri Farmers Producer Co." />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvAppStatusBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#FFF3E0"
+                android:paddingHorizontal="10.dp"
+                android:paddingVertical="4.dp"
+                android:text="Under Review"
+                android:textColor="#E65100"
+                android:textSize="11.sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Details Grid (Area, Quantity, Harvest Date, Total Value) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12.dp"
+            android:background="#F8FBF7"
+            android:orientation="vertical"
+            android:padding="12.dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0.dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🌾 Committed Area"
+                        android:textColor="#757575"
+                        android:textSize="11.sp" />
+
+                    <TextView
+                        android:id="@+id/tvAppLandArea"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#212121"
+                        android:textSize="13.sp"
+                        android:textStyle="bold"
+                        tools:text="3.5 Acres" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0.dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📦 Expected Yield"
+                        android:textColor="#757575"
+                        android:textSize="11.sp" />
+
+                    <TextView
+                        android:id="@+id/tvAppQuantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#212121"
+                        android:textSize="13.sp"
+                        android:textStyle="bold"
+                        tools:text="35.0 Tons" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8.dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0.dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📅 Harvest Target"
+                        android:textColor="#757575"
+                        android:textSize="11.sp" />
+
+                    <TextView
+                        android:id="@+id/tvAppHarvestDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#212121"
+                        android:textSize="13.sp"
+                        android:textStyle="bold"
+                        tools:text="Oct 2026" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0.dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="💰 Total Value"
+                        android:textColor="#757575"
+                        android:textSize="11.sp" />
+
+                    <TextView
+                        android:id="@+id/tvAppTotalValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#2E7D32"
+                        android:textSize="13.sp"
+                        android:textStyle="bold"
+                        tools:text="₹7,70,000" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Progress Milestone Bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10.dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvAppMilestoneText"
+                    android:layout_width="0.dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="#2E7D32"
+                    android:textSize="12.sp"
+                    android:textStyle="bold"
+                    tools:text="Current Stage: Active Cultivation in Progress" />
+
+                <TextView
+                    android:id="@+id/tvAppProgressPercent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#616161"
+                    android:textSize="12.sp"
+                    android:textStyle="bold"
+                    tools:text="65%" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/pbAppMilestoneProgress"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8.dp"
+                android:layout_marginTop="6.dp"
+                android:progress="65"
+                android:progressDrawable="@drawable/progress_bar_custom" />
+        </LinearLayout>
+
+        <!-- Notes / Message Snippet -->
+        <TextView
+            android:id="@+id/tvAppNotes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8.dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="#757575"
+            android:textSize="12.sp"
+            tools:text="Note: Grade A export quality with drip irrigation and organic soil amendments." />
+
+        <!-- Action Buttons Layout (Dynamic for Farmer / Company) -->
+        <LinearLayout
+            android:id="@+id/layoutCompanyActions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12.dp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRejectApp"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0.dp"
+                android:layout_height="40.dp"
+                android:layout_marginEnd="6.dp"
+                android:layout_weight="1"
+                android:text="Reject"
+                android:textColor="#D32F2F"
+                android:textSize="12.sp"
+                app:strokeColor="#D32F2F" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAcceptApp"
+                android:layout_width="0.dp"
+                android:layout_height="40.dp"
+                android:layout_marginStart="6.dp"
+                android:layout_weight="1"
+                android:backgroundTint="#2E7D32"
+                android:text="Accept Farmer"
+                android:textColor="@android:color/white"
+                android:textSize="12.sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Farmer View Action -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnViewTimeline"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="match_parent"
+            android:layout_height="40.dp"
+            android:layout_marginTop="10.dp"
+            android:backgroundTint="#E8F5E9"
+            android:text="View Contract Timeline &amp; Terms"
+            android:textColor="#2E7D32"
+            android:textSize="12.sp" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

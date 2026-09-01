@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20.dp">
+
+        <!-- Top Header: Crop Emoji, Title, Close Button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvDetailCropEmoji"
+                android:layout_width="50.dp"
+                android:layout_height="50.dp"
+                android:background="#E8F5E9"
+                android:gravity="center"
+                android:text="🌾"
+                android:textSize="26.sp" />
+
+            <LinearLayout
+                android:layout_width="0.dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14.dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvDetailCropName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#212121"
+                    android:textSize="18.sp"
+                    android:textStyle="bold"
+                    tools:text="Pune Red Onions" />
+
+                <TextView
+                    android:id="@+id/tvDetailVariety"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#616161"
+                    android:textSize="13.sp"
+                    tools:text="Variety: N-53 Grade A / Garwa" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/btnCloseDetails"
+                android:layout_width="36.dp"
+                android:layout_height="36.dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Close"
+                android:src="@drawable/ic_delete"
+                app:tint="#757575" />
+        </LinearLayout>
+
+        <!-- Company Profile Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14.dp"
+            app:cardBackgroundColor="#F8FBF7"
+            app:cardCornerRadius="12.dp"
+            app:cardElevation="0.dp"
+            app:strokeColor="#C8E6C9"
+            app:strokeWidth="1.dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12.dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🏢"
+                        android:textSize="16.sp" />
+
+                    <TextView
+                        android:id="@+id/tvDetailCompanyName"
+                        android:layout_width="0.dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8.dp"
+                        android:layout_weight="1"
+                        android:textColor="#2E7D32"
+                        android:textSize="14.sp"
+                        android:textStyle="bold"
+                        tools:text="Sahyadri Farmers Producer Co. Ltd." />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="✓ Verified Corporate"
+                        android:textColor="#1976D2"
+                        android:textSize="11.sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvDetailCompanyPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4.dp"
+                    android:textColor="#616161"
+                    android:textSize="12.sp"
+                    tools:text="📞 Procurement Desk: +91 20 2554 8899" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Terms & Specs Breakdown -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16.dp"
+            android:text="Commercial Terms &amp; Specifications"
+            android:textColor="#212121"
+            android:textSize="14.sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8.dp"
+            android:background="#F1F5F9"
+            android:orientation="vertical"
+            android:padding="12.dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0.dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Target Procurement Volume:"
+                    android:textColor="#616161"
+                    android:textSize="12.sp" />
+
+                <TextView
+                    android:id="@+id/tvDetailQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#212121"
+                    android:textSize="13.sp"
+                    android:textStyle="bold"
+                    tools:text="100 Tons" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6.dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0.dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Offered Assured Price:"
+                    android:textColor="#616161"
+                    android:textSize="12.sp" />
+
+                <TextView
+                    android:id="@+id/tvDetailPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#2E7D32"
+                    android:textSize="14.sp"
+                    android:textStyle="bold"
+                    tools:text="₹22,000 / Ton" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6.dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0.dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Advance Token Upon Signing:"
+                    android:textColor="#616161"
+                    android:textSize="12.sp" />
+
+                <TextView
+                    android:id="@+id/tvDetailAdvance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#E65100"
+                    android:textSize="13.sp"
+                    android:textStyle="bold"
+                    tools:text="25% Advance" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6.dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0.dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Harvest / Procurement Window:"
+                    android:textColor="#616161"
+                    android:textSize="12.sp" />
+
+                <TextView
+                    android:id="@+id/tvDetailHarvestPeriod"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#212121"
+                    android:textSize="13.sp"
+                    android:textStyle="bold"
+                    tools:text="Sept - Oct 2026" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6.dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0.dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Collection Center / Hub:"
+                    android:textColor="#616161"
+                    android:textSize="12.sp" />
+
+                <TextView
+                    android:id="@+id/tvDetailLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#212121"
+                    android:textSize="13.sp"
+                    android:textStyle="bold"
+                    tools:text="Junnar, Ambegaon &amp; Khed" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Quality Specifications -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14.dp"
+            android:text="🔍 Quality Specifications &amp; Standards"
+            android:textColor="#212121"
+            android:textSize="13.sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvDetailQualitySpecs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4.dp"
+            android:background="#F8FBF7"
+            android:padding="10.dp"
+            android:textColor="#424242"
+            android:textSize="12.sp"
+            tools:text="Bulb diameter 45-65mm, tight pink skin, max 10% moisture, zero sprouting." />
+
+        <!-- Payment & Additional Terms -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12.dp"
+            android:text="📜 Payment Schedule &amp; Support"
+            android:textColor="#212121"
+            android:textSize="13.sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvDetailPaymentTerms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4.dp"
+            android:background="#F8FBF7"
+            android:padding="10.dp"
+            android:textColor="#424242"
+            android:textSize="12.sp"
+            tools:text="25% on agreement, 75% on batch gate delivery within 48 hours via RTGS." />
+
+        <!-- Safety Disclaimer Box -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14.dp"
+            android:background="#FFF8E1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10.dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⚠️"
+                android:textSize="16.sp" />
+
+            <TextView
+                android:layout_width="0.dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8.dp"
+                android:layout_weight="1"
+                android:text="Review all contract terms before accepting. Do not proceed if specifications or payment schedules are unclear."
+                android:textColor="#E65100"
+                android:textSize="11.sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Primary Action Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnApplyNowFromDetail"
+            android:layout_width="match_parent"
+            android:layout_height="50.dp"
+            android:layout_marginTop="18.dp"
+            android:backgroundTint="#2E7D32"
+            android:text="Apply for this Contract"
+            android:textColor="@android:color/white"
+            android:textSize="14.sp"
+            android:textStyle="bold"
+            app:cornerRadius="12.dp" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

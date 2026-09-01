@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12.dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="16.dp"
+    app:cardElevation="2.dp"
+    app:strokeColor="#E2E8F0"
+    app:strokeWidth="1.dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16.dp">
+
+        <!-- Top Row: Emoji, Crop Name, Match Badge, Status -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvContractCropEmoji"
+                android:layout_width="44.dp"
+                android:layout_height="44.dp"
+                android:background="#E8F5E9"
+                android:gravity="center"
+                android:text="🌾"
+                android:textSize="22.sp" />
+
+            <LinearLayout
+                android:layout_width="0.dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12.dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvContractCropName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#212121"
+                    android:textSize="16.sp"
+                    android:textStyle="bold"
+                    tools:text="Pune Red Onions" />
+
+                <TextView
+                    android:id="@+id/tvContractVariety"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#616161"
+                    android:textSize="12.sp"
+                    tools:text="Variety: N-53 Grade A / Garwa" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvContractStatusBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#E8F5E9"
+                android:paddingHorizontal="10.dp"
+                android:paddingVertical="4.dp"
+                android:text="Open"
+                android:textColor="#2E7D32"
+                android:textSize="11.sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Crop Matching Banner -->
+        <LinearLayout
+            android:id="@+id/layoutCropMatch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10.dp"
+            android:background="#FFF8E1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="10.dp"
+            android:paddingVertical="6.dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="✨"
+                android:textSize="13.sp" />
+
+            <TextView
+                android:id="@+id/tvCropMatchText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6.dp"
+                android:text="Matches your farm crop! High relevance for your harvest."
+                android:textColor="#E65100"
+                android:textSize="12.sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Buyer & Verification -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10.dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🏢 Buyer:"
+                android:textColor="#757575"
+                android:textSize="12.sp" />
+
+            <TextView
+                android:id="@+id/tvContractCompanyName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6.dp"
+                android:textColor="#2E7D32"
+                android:textSize="13.sp"
+                android:textStyle="bold"
+                tools:text="Sahyadri Farmers Producer Co. Ltd." />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6.dp"
+                android:text="✓ Verified"
+                android:textColor="#1976D2"
+                android:textSize="10.sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Key Terms Grid (Quantity, Price, Harvest, Location) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12.dp"
+            android:background="#F8FBF7"
+            android:orientation="vertical"
+            android:padding="12.dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0.dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Required Quantity"
+                        android:textColor="#757575"
+                        android:textSize="11.sp" />
+
+                    <TextView
+                        android:id="@+id/tvContractQuantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#212121"
+                        android:textSize="14.sp"
+                        android:textStyle="bold"
+                        tools:text="100 Tons" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0.dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Offered Price"
+                        android:textColor="#757575"
+                        android:textSize="11.sp" />
+
+                    <TextView
+                        android:id="@+id/tvContractPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#2E7D32"
+                        android:textSize="14.sp"
+                        android:textStyle="bold"
+                        tools:text="₹22,000 / Ton" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8.dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0.dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📅 Harvest Period"
+                        android:textColor="#757575"
+                        android:textSize="11.sp" />
+
+                    <TextView
+                        android:id="@+id/tvContractHarvestPeriod"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#212121"
+                        android:textSize="13.sp"
+                        android:textStyle="bold"
+                        tools:text="Sept - Oct 2026" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0.dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📍 Location"
+                        android:textColor="#757575"
+                        android:textSize="11.sp" />
+
+                    <TextView
+                        android:id="@+id/tvContractLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#212121"
+                        android:textSize="13.sp"
+                        android:textStyle="bold"
+                        tools:text="Junnar Cluster" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Quality & Advance Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10.dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvContractAdvanceTag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#FFF3E0"
+                android:paddingHorizontal="8.dp"
+                android:paddingVertical="3.dp"
+                android:text="💰 25% Advance Token"
+                android:textColor="#E65100"
+                android:textSize="11.sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvContractDeadline"
+                android:layout_width="0.dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8.dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textColor="#757575"
+                android:textSize="11.sp"
+                tools:text="Apply before 15 Sep 2026" />
+        </LinearLayout>
+
+        <!-- Action Buttons Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14.dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnViewContractDetails"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0.dp"
+                android:layout_height="44.dp"
+                android:layout_marginEnd="6.dp"
+                android:layout_weight="1"
+                android:text="View Details"
+                android:textColor="#2E7D32"
+                android:textSize="13.sp"
+                app:strokeColor="#2E7D32" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnApplyContract"
+                android:layout_width="0.dp"
+                android:layout_height="44.dp"
+                android:layout_marginStart="6.dp"
+                android:layout_weight="1"
+                android:backgroundTint="#2E7D32"
+                android:text="Apply Now"
+                android:textColor="@android:color/white"
+                android:textSize="13.sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

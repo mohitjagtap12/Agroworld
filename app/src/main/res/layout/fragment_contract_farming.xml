@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FBF7">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Top Header Bar -->
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbarContractFarming"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#2E7D32"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@android:color/white"
+            app:title="🤝 Contract Farming"
+            app:titleTextColor="@android:color/white">
+
+            <ImageButton
+                android:id="@+id/btnRefreshContracts"
+                android:layout_width="40.dp"
+                android:layout_height="40.dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="12.dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Refresh"
+                android:src="@drawable/ic_refresh"
+                app:tint="@android:color/white" />
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16.dp">
+
+                <!-- Safety Notice Banner -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="#E8F5E9"
+                    app:cardCornerRadius="12.dp"
+                    app:cardElevation="0.dp"
+                    app:strokeColor="#C8E6C9"
+                    app:strokeWidth="1.dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="12.dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🛡️"
+                            android:textSize="22.sp" />
+
+                        <LinearLayout
+                            android:layout_width="0.dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10.dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Verified Corporate Contracts"
+                                android:textColor="#2E7D32"
+                                android:textSize="13.sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Direct corporate procurement with advance token. Review all contract terms before accepting."
+                                android:textColor="#388E3C"
+                                android:textSize="11.sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Quick KPI Metrics Grid (4 cards) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12.dp"
+                    android:orientation="horizontal">
+
+                    <!-- Metric 1: Available Contracts -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardMetricAvailable"
+                        android:layout_width="0.dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4.dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="@android:color/white"
+                        app:cardCornerRadius="12.dp"
+                        app:cardElevation="1.dp"
+                        app:strokeColor="#E2E8F0"
+                        app:strokeWidth="1.dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="10.dp">
+
+                            <TextView
+                                android:id="@+id/tvCountAvailable"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#2E7D32"
+                                android:textSize="18.sp"
+                                android:textStyle="bold"
+                                tools:text="5" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Available\nContracts"
+                                android:textColor="#616161"
+                                android:textSize="10.sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Metric 2: Applications -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardMetricApplications"
+                        android:layout_width="0.dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="4.dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="@android:color/white"
+                        app:cardCornerRadius="12.dp"
+                        app:cardElevation="1.dp"
+                        app:strokeColor="#E2E8F0"
+                        app:strokeWidth="1.dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="10.dp">
+
+                            <TextView
+                                android:id="@+id/tvCountApplications"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#F9A825"
+                                android:textSize="18.sp"
+                                android:textStyle="bold"
+                                tools:text="1" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Pending\nReview"
+                                android:textColor="#616161"
+                                android:textSize="10.sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Metric 3: Active Deals -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardMetricActive"
+                        android:layout_width="0.dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="4.dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="@android:color/white"
+                        app:cardCornerRadius="12.dp"
+                        app:cardElevation="1.dp"
+                        app:strokeColor="#E2E8F0"
+                        app:strokeWidth="1.dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="10.dp">
+
+                            <TextView
+                                android:id="@+id/tvCountActive"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#1976D2"
+                                android:textSize="18.sp"
+                                android:textStyle="bold"
+                                tools:text="1" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Active\nContracts"
+                                android:textColor="#616161"
+                                android:textSize="10.sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Metric 4: Completed -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardMetricCompleted"
+                        android:layout_width="0.dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4.dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="@android:color/white"
+                        app:cardCornerRadius="12.dp"
+                        app:cardElevation="1.dp"
+                        app:strokeColor="#E2E8F0"
+                        app:strokeWidth="1.dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="10.dp">
+
+                            <TextView
+                                android:id="@+id/tvCountCompleted"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#388E3C"
+                                android:textSize="18.sp"
+                                android:textStyle="bold"
+                                tools:text="0" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Completed\nDeals"
+                                android:textColor="#616161"
+                                android:textSize="10.sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <!-- Section Selector Tabs (Available / Applications / Active / Completed) -->
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayoutContractSections"
+                    android:layout_width="match_parent"
+                    android:layout_height="44.dp"
+                    android:layout_marginTop="14.dp"
+                    android:background="@drawable/bg_rounded_light_green"
+                    app:tabGravity="fill"
+                    app:tabIndicatorColor="#2E7D32"
+                    app:tabIndicatorHeight="3.dp"
+                    app:tabMode="scrollable"
+                    app:tabSelectedTextColor="#2E7D32"
+                    app:tabTextAppearance="@android:style/TextAppearance.Small"
+                    app:tabTextColor="#616161">
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Available Contracts" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="My Applications" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Active Contracts" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Completed" />
+                </com.google.android.material.tabs.TabLayout>
+
+                <!-- Search Input Bar (Visible in Available Contracts) -->
+                <LinearLayout
+                    android:id="@+id/layoutSearchAndFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12.dp"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilSearchContracts"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Search by crop, company or location..."
+                        app:boxCornerRadiusBottomEnd="12.dp"
+                        app:boxCornerRadiusBottomStart="12.dp"
+                        app:boxCornerRadiusTopEnd="12.dp"
+                        app:boxCornerRadiusTopStart="12.dp"
+                        app:boxStrokeColor="#2E7D32"
+                        app:endIconMode="clear_text"
+                        app:startIconDrawable="@drawable/ic_search">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etSearchContracts"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionSearch"
+                            android:inputType="text"
+                            android:textSize="13.sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Filter Chips Horizontal Scroll -->
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8.dp"
+                        android:scrollbars="none">
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/chipGroupContractFilters"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:selectionRequired="true"
+                            app:singleLine="true"
+                            app:singleSelection="true">
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipFilterAll"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="true"
+                                android:text="All Contracts"
+                                android:textColor="@color/chip_text_state_list"
+                                app:chipBackgroundColor="@color/chip_background_state_list" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipFilterMatchesCrop"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="✨ Matches My Crops"
+                                android:textColor="@color/chip_text_state_list"
+                                app:chipBackgroundColor="@color/chip_background_state_list" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipFilterOnion"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🧅 Onions"
+                                android:textColor="@color/chip_text_state_list"
+                                app:chipBackgroundColor="@color/chip_background_state_list" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipFilterWheat"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🌾 Wheat / Grains"
+                                android:textColor="@color/chip_text_state_list"
+                                app:chipBackgroundColor="@color/chip_background_state_list" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipFilterVegetables"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🍅 Vegetables"
+                                android:textColor="@color/chip_text_state_list"
+                                app:chipBackgroundColor="@color/chip_background_state_list" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipFilterPune"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="📍 Pune / Local"
+                                android:textColor="@color/chip_text_state_list"
+                                app:chipBackgroundColor="@color/chip_background_state_list" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipFilterHighValue"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="💰 High Value"
+                                android:textColor="@color/chip_text_state_list"
+                                app:chipBackgroundColor="@color/chip_background_state_list" />
+                        </com.google.android.material.chip.ChipGroup>
+                    </HorizontalScrollView>
+                </LinearLayout>
+
+                <!-- RecyclerView for Contracts or Applications -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvContractList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12.dp"
+                    android:nestedScrollingEnabled="false"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_contract_card" />
+
+                <!-- Empty State Layout -->
+                <LinearLayout
+                    android:id="@+id/layoutEmptyContracts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="36.dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="24.dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tvEmptyIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🤝"
+                        android:textSize="48.sp" />
+
+                    <TextView
+                        android:id="@+id/tvEmptyTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12.dp"
+                        android:text="No contract opportunities available right now."
+                        android:textColor="#212121"
+                        android:textSize="15.sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvEmptySubtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4.dp"
+                        android:gravity="center"
+                        android:text="Try adjusting your filter or check back as companies publish new seasonal demand."
+                        android:textColor="#757575"
+                        android:textSize="12.sp" />
+                </LinearLayout>
+
+                <!-- Loading Indicator -->
+                <ProgressBar
+                    android:id="@+id/pbContractLoading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="24.dp"
+                    android:indeterminateTint="#2E7D32"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

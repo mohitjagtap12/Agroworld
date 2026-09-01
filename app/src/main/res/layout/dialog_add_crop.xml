@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/farmer_surface"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🌱 Add New Field Crop"
+            android:textColor="@color/farmer_primary"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Track your field cultivation, irrigation, and AI plant health"
+            android:textColor="@color/farmer_text_secondary"
+            android:textSize="13sp" />
+
+        <!-- Crop Name Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Crop Name (e.g. Onion, Tomato, Sugarcane)"
+            app:boxStrokeColor="@color/farmer_primary"
+            app:hintTextColor="@color/farmer_primary">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCropName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Variety Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Variety (e.g. N-53, Co 86032, Indrayani)"
+            app:boxStrokeColor="@color/farmer_primary"
+            app:hintTextColor="@color/farmer_primary">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCropVariety"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Category & Land Area Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:hint="Category (e.g. Cash Crop)"
+                app:boxStrokeColor="@color/farmer_primary">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCropCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cash Crop" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:hint="Land Area (Acres)"
+                app:boxStrokeColor="@color/farmer_primary">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etLandArea"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:text="2.0" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <!-- Sowing Date & Harvest Date Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:hint="Sowing Date"
+                app:boxStrokeColor="@color/farmer_primary">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSowingDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="15 June 2026" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:hint="Expected Harvest"
+                app:boxStrokeColor="@color/farmer_primary">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etHarvestDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="20 Oct 2026" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <!-- Irrigation Type -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Irrigation Type"
+            app:boxStrokeColor="@color/farmer_primary">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etIrrigationType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Drip Irrigation" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCancelAddCrop"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:textColor="@color/farmer_text_secondary" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSubmitAddCrop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Save Crop"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/farmer_primary" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

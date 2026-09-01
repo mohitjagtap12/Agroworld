@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:strokeColor="@color/farmer_stroke"
+    app:strokeWidth="1dp"
+    app:cardBackgroundColor="@color/farmer_surface">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Top Order Info & Status Badge -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvOrderNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/farmer_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="ORD-AGRO-7821" />
+
+                <TextView
+                    android:id="@+id/tvOrderDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/farmer_text_secondary"
+                    android:textSize="11sp"
+                    tools:text="Ordered on 31 Aug 2026" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvOrderStatusBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/farmer_light_bg"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:textColor="@color/farmer_primary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:text="Order Placed" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="10dp"
+            android:background="@color/farmer_stroke" />
+
+        <!-- Farmer & Delivery Details -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <FrameLayout
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_circle_light_green"
+                android:backgroundTint="@color/farmer_light_bg">
+
+                <TextView
+                    android:id="@+id/tvOrderProductEmoji"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="22sp"
+                    tools:text="🌱" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvOrderProductName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/farmer_text_primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    tools:text="Wheat Seeds (HD-2967)" />
+
+                <TextView
+                    android:id="@+id/tvOrderQuantityAndPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/farmer_text_secondary"
+                    android:textSize="13sp"
+                    tools:text="Qty: 2 kg × ₹120 = ₹240" />
+
+                <TextView
+                    android:id="@+id/tvFarmerCustomerInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/farmer_text_primary"
+                    android:textSize="12sp"
+                    tools:text="Farmer: Rameshwar Patil (+91 98220 12345)" />
+
+                <TextView
+                    android:id="@+id/tvDeliveryLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/farmer_text_secondary"
+                    android:textSize="11sp"
+                    tools:text="📍 Narayangaon, Junnar (Pune)" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Payment & Delivery mode -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/farmer_light_bg"
+            android:padding="8dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvPaymentAndDeliveryInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/farmer_primary_dark"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                tools:text="🚚 AgroWorld Delivery • 💵 Cash on Delivery" />
+
+            <TextView
+                android:id="@+id/tvOrderTotalAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/farmer_primary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="₹240" />
+        </LinearLayout>
+
+        <!-- Dynamic Action Buttons for Seller Fulfillment Workflow -->
+        <LinearLayout
+            android:id="@+id/layoutSellerOrderActions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRejectOrder"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Reject"
+                android:textColor="@color/farmer_error"
+                android:textSize="12sp"
+                app:strokeColor="@color/farmer_error"
+                app:cornerRadius="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAcceptOrder"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:text="Accept"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:backgroundTint="@color/farmer_primary"
+                app:cornerRadius="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMarkPacked"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:visibility="gone"
+                android:text="Mark Packed"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:backgroundTint="@color/farmer_accent"
+                app:cornerRadius="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnReadyForDelivery"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:visibility="gone"
+                android:text="Ready for Delivery"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:backgroundTint="@color/farmer_info"
+                app:cornerRadius="8dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

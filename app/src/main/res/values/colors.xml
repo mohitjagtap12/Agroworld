@@ -7,4 +7,23 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- AgroWorld Theme Palette -->
+    <color name="forest_green">#2E7D32</color>
+    <color name="farmer_primary">#2E7D32</color>
+    <color name="farmer_primary_dark">#1B5E20</color>
+    <color name="farmer_secondary">#66BB6A</color>
+    <color name="farmer_accent">#F9A825</color>
+    <color name="farmer_background">#F8FBF7</color>
+    <color name="farmer_light_bg">#E8F5E9</color>
+    <color name="farmer_surface">#FFFFFF</color>
+    <color name="farmer_card_bg">#FFFFFF</color>
+    <color name="farmer_text_primary">#212121</color>
+    <color name="farmer_text_secondary">#616161</color>
+    <color name="farmer_muted">#9E9E9E</color>
+    <color name="farmer_stroke">#E0E0E0</color>
+    <color name="farmer_success">#4CAF50</color>
+    <color name="farmer_error">#D32F2F</color>
+    <color name="farmer_warning">#FFA000</color>
+    <color name="farmer_info">#1976D2</color>
 </resources>

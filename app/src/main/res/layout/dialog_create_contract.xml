@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20.dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📝 Publish Corporate Contract"
+            android:textColor="#212121"
+            android:textSize="18.sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2.dp"
+            android:text="Create a transparent buyback contract opportunity for verified local farmers."
+            android:textColor="#616161"
+            android:textSize="12.sp" />
+
+        <!-- Crop Name -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilCreateCropName"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14.dp"
+            android:hint="Crop Required (e.g. Pune Red Onions) *"
+            app:boxStrokeColor="#2E7D32">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCreateCropName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:textSize="14.sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Variety & Emoji Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10.dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilCreateVariety"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0.dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6.dp"
+                android:layout_weight="1"
+                android:hint="Crop Variety *"
+                app:boxStrokeColor="#2E7D32">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCreateVariety"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords"
+                    android:textSize="14.sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilCreateEmoji"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="80.dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6.dp"
+                android:hint="Emoji"
+                app:boxStrokeColor="#2E7D32">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCreateEmoji"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="🌾"
+                    android:textSize="16.sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <!-- Quantity (Tons) & Offered Price (₹/Ton) Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10.dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilCreateQuantity"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0.dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6.dp"
+                android:layout_weight="1"
+                android:hint="Volume (Tons) *"
+                app:boxStrokeColor="#2E7D32">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCreateQuantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:textSize="14.sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilCreatePrice"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0.dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6.dp"
+                android:layout_weight="1"
+                android:hint="Price (₹/Ton) *"
+                app:boxStrokeColor="#2E7D32">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCreatePrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:textSize="14.sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <!-- Advance % & Application Deadline Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10.dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilCreateAdvance"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0.dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6.dp"
+                android:layout_weight="1"
+                android:hint="Advance % (Token)"
+                app:boxStrokeColor="#2E7D32">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCreateAdvance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:text="25"
+                    android:textSize="14.sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilCreateDeadline"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0.dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6.dp"
+                android:layout_weight="1"
+                android:hint="Apply Deadline *"
+                app:boxStrokeColor="#2E7D32">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCreateDeadline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:text="25 Sept 2026"
+                    android:textSize="14.sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <!-- Harvest Period & Location Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10.dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilCreateHarvestPeriod"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0.dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6.dp"
+                android:layout_weight="1"
+                android:hint="Harvest Window *"
+                app:boxStrokeColor="#2E7D32">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCreateHarvestPeriod"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:text="Oct - Nov 2026"
+                    android:textSize="14.sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilCreateLocation"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0.dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6.dp"
+                android:layout_weight="1"
+                android:hint="Collection Center *"
+                app:boxStrokeColor="#2E7D32">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCreateLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:text="Pune &amp; Junnar Hub"
+                    android:textSize="14.sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <!-- Quality Specifications -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilCreateQualitySpecs"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10.dp"
+            android:hint="Quality &amp; Grading Standards *"
+            app:boxStrokeColor="#2E7D32">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCreateQualitySpecs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:lines="2"
+                android:text="Standard FAQ specs, max 10% moisture, zero rot or pest infestation."
+                android:textSize="13.sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Terms and Payment Schedule -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilCreatePaymentTerms"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10.dp"
+            android:hint="Payment Terms &amp; Settlement Timeline *"
+            app:boxStrokeColor="#2E7D32">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCreatePaymentTerms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:lines="2"
+                android:text="25% advance token upon signing, balance via RTGS within 48h of weighbridge receipt."
+                android:textSize="13.sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Buttons Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18.dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCancelCreateContract"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0.dp"
+                android:layout_height="48.dp"
+                android:layout_marginEnd="6.dp"
+                android:layout_weight="1"
+                android:text="Cancel"
+                android:textColor="#616161"
+                app:strokeColor="#BDBDBD" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnConfirmPublishContract"
+                android:layout_width="0.dp"
+                android:layout_height="48.dp"
+                android:layout_marginStart="6.dp"
+                android:layout_weight="1"
+                android:backgroundTint="#2E7D32"
+                android:text="Publish Contract"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

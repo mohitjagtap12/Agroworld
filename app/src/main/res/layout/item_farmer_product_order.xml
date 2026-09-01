@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:strokeColor="@color/farmer_stroke"
+    app:strokeWidth="1dp"
+    app:cardBackgroundColor="@color/farmer_surface">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Top Header: Order ID + Status Chip -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvFarmerOrderNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/farmer_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="ORD-AGRO-7822" />
+
+                <TextView
+                    android:id="@+id/tvFarmerOrderDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/farmer_text_secondary"
+                    android:textSize="11sp"
+                    tools:text="29 Aug 2026" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvFarmerOrderStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/farmer_light_bg"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:textColor="@color/farmer_primary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:text="Packed" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="10dp"
+            android:background="@color/farmer_stroke" />
+
+        <!-- Product & Seller Info -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_circle_light_green"
+                android:backgroundTint="@color/farmer_light_bg">
+
+                <TextView
+                    android:id="@+id/tvFarmerOrderEmoji"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="24sp"
+                    tools:text="🍅" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvFarmerOrderProductName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/farmer_text_primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    tools:text="Hybrid Tomato Seeds F1 (Abhinav)" />
+
+                <TextView
+                    android:id="@+id/tvFarmerOrderSellerName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/farmer_text_secondary"
+                    android:textSize="12sp"
+                    tools:text="Seller: Kisan Agri Mart &amp; Seed Center" />
+
+                <TextView
+                    android:id="@+id/tvFarmerOrderQtyAndTotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/farmer_primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    tools:text="3 packet • Total: ₹1,350" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Delivery & Payment Banner -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_rounded_light_green"
+            android:padding="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvFarmerOrderDeliveryStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/farmer_primary_dark"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:text="🚚 Delivery Partner: Assigned &amp; Preparing pickup" />
+
+            <TextView
+                android:id="@+id/tvFarmerOrderAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/farmer_text_secondary"
+                android:textSize="11sp"
+                tools:text="📍 Delivery to: Gat No. 42, Narayangaon, Junnar" />
+        </LinearLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

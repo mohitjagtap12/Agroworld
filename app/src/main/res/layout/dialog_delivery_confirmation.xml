@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="22dp"
+    android:background="@drawable/bg_dialog_rounded">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🚚 Confirm Delivery &amp; Handover"
+        android:textColor="#212121"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvDialogDeliverySummary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Order DEL-2026-000103 • Destination: GreenBio Energy Plant"
+        android:textColor="#616161"
+        android:textSize="13sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="14dp"
+        android:background="#E0E0E0" />
+
+    <!-- Recipient Name Input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilRecipientName"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Recipient Name / Authorized Signee *"
+        app:boxStrokeColor="#2E7D32"
+        app:hintTextColor="#2E7D32">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etRecipientName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:textSize="14sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Confirmation Method -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="Confirmation Method"
+        android:textColor="#424242"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <RadioGroup
+        android:id="@+id/rgConfirmationMethod"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/rbOtpVerified"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="🔐 OTP Verified by Customer/Buyer"
+            android:textSize="13sp" />
+
+        <RadioButton
+            android:id="@+id/rbDirectHandover"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🤝 Direct Physical Handover &amp; Inspection"
+            android:textSize="13sp" />
+
+        <RadioButton
+            android:id="@+id/rbFieldGateDrop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📍 Farm Gate / Godown Drop (Authorized)"
+            android:textSize="13sp" />
+    </RadioGroup>
+
+    <!-- Optional Notes -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilDeliveryRemarks"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Handover Remarks / Delivery Notes (Optional)"
+        app:boxStrokeColor="#2E7D32"
+        app:hintTextColor="#2E7D32">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etDeliveryRemarks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:lines="2"
+            android:textSize="13sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancelDialog"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="Cancel"
+            android:textColor="#616161" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnConfirmDeliverySubmit"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_marginStart="8dp"
+            android:text="Confirm &amp; Complete"
+            android:textColor="@android:color/white"
+            app:backgroundTint="#2E7D32"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvNegotiateDialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="📈 Bulk Price Negotiation"
+        android:textColor="@color/farmer_text_primary"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvNegotiateSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Wheat • 8 Tons • Expected: ₹2,550/qtl"
+        android:textColor="@color/farmer_text_secondary"
+        android:textSize="13sp" />
+
+    <!-- Current State Box -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:cardBackgroundColor="#FFF8E1"
+        app:cardCornerRadius="12dp"
+        app:strokeColor="#FFE082"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tvNegotiationHistoryText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Current Offer: ₹2,525 / quintal\nLast update: Broker offered counter price ₹2,500/quintal"
+                android:textColor="#F57F17"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Counter Price Input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilCounterPrice"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:hint="New Counter Price (₹ / quintal)">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etCounterPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:text="2525" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Negotiation Note Input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilNegotiateNote"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Negotiation Message / Justification">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etNegotiateNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:lines="2"
+            android:text="Clean high grade wheat with &lt;10.5% moisture. Willing to settle at ₹2,525/qtl." />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancelNegotiateDialog"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:textColor="@color/farmer_text_secondary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSubmitCounterDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="@color/farmer_primary"
+            android:text="Send Counter-Offer"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:cornerRadius="8dp" />
+    </LinearLayout>
+</LinearLayout>
