@@ -8,6 +8,7 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.net.Uri
 import android.widget.Toast
+import com.example.network.SessionManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -207,147 +208,36 @@ fun FarmerPortalScreen(navController: NavController) {
     var showQuickAddModal by remember { mutableStateOf(false) }
 
     // Profile States
-    var farmerName by remember { mutableStateOf("Ramesh Patil") }
-    var mobileNumber by remember { mutableStateOf("+91 98220 14589") }
-    var village by remember { mutableStateOf("Narayangaon") }
-    var taluka by remember { mutableStateOf("Junnar") }
-    var district by remember { mutableStateOf("Pune") }
-    var landArea by remember { mutableStateOf("5.5 Acres") }
-    var preferredCrops by remember { mutableStateOf("Pune Red Onions, Sugarcane, Soybean") }
+    var farmerName by remember { mutableStateOf(SessionManager.getInstance(context).userName.ifEmpty { "Registered Farmer" }) }
+    var mobileNumber by remember { mutableStateOf(SessionManager.getInstance(context).userPhone.ifEmpty { "+91 ----------" }) }
+    var village by remember { mutableStateOf(SessionManager.getInstance(context).userVillage.ifEmpty { "Village / Taluka" }) }
+    var taluka by remember { mutableStateOf("") }
+    var district by remember { mutableStateOf(SessionManager.getInstance(context).userDistrict.ifEmpty { "District" }) }
+    var landArea by remember { mutableStateOf("") }
+    var preferredCrops by remember { mutableStateOf("") }
     var profilePhotoUri by remember { mutableStateOf<Uri?>(null) }
 
     // Dynamic Memory Databases
-    val cropsList = remember {
-        mutableStateListOf(
-            FarmerCrop("c1", "Pune Red Onions", "N-53 Grade A", "Vegetables", "2.5", "Acres", "15 April 2026", "20 August 2026", "Drip Irrigation", 12.0, 1950.0, "Organic compost grown in Junnar cluster.", "Growing", "🧅"),
-            FarmerCrop("c2", "Sugarcane", "Co 86032", "Cash Crop", "2.0", "Acres", "10 Jan 2026", "15 Dec 2026", "Drip Irrigation", 80.0, 3100.0, "High sugar yield drip irrigated cane.", "Ready for Harvest", "🎋"),
-            FarmerCrop("c3", "Indrayani Rice", "Scented Certified", "Grains", "1.0", "Acre", "05 June 2026", "10 Oct 2026", "Canal Irrigation", 25.0, 4200.0, "Fragrant Indrayani rice paddy.", "Growing", "🌾")
-        )
-    }
+    val cropsList = remember { mutableStateListOf<FarmerCrop>() }
 
-    val ordersList = remember {
-        mutableStateListOf(
-            UnifiedOrder("ord1", "Produce", "Pune Red Onions (5 Quintal)", "Crop Sales", "Suresh Mehta (Wholesaler)", "+91 98451 23091", "5 Quintal", 9750.0, "12 Aug 2026", "Pending", "Wagholi APMC, Pune"),
-            UnifiedOrder("ord2", "Product", "Mahadhan NPK 10:26:26 (2 Bags)", "Agri Store", "Kisan Krushi Kendra Junnar", "+91 94220 11223", "2 Bags", 2300.0, "11 Aug 2026", "Out for Delivery", "Narayangaon Farm House"),
-            UnifiedOrder("ord3", "Waste", "Sugarcane Residue / पाचट (3 Tons)", "Agri Waste", "BioPower Pellet Unit", "+91 91223 45678", "3 Tons", 4500.0, "08 Aug 2026", "Delivered", "Junnar Pellet Mill")
-        )
-    }
+    val ordersList = remember { mutableStateListOf<UnifiedOrder>() }
 
-    val storeProducts = remember {
-        listOf(
-            StoreProduct("p1", "Mahadhan 10:26:26 NPK Fertilizer", "Mahadhan", "Fertilizers", 1150.0, 45, 4.8, "High-efficiency balanced fertilizer perfect for onions & sugarcane.", "🧪"),
-            StoreProduct("p2", "Neem Bark Natural Pesticide 1L", "EcoShield", "Pesticides", 340.0, 18, 4.6, "100% cold-pressed organic leaf neem oil concentrate.", "🍃"),
-            StoreProduct("p3", "Indrayani Scented Seeds 5Kg", "MahaSeeds", "Seeds", 680.0, 80, 4.9, "High germination rate certified by MAHABEEJ.", "🌾"),
-            StoreProduct("p4", "Heavy Duty Agri Power Sprayer", "Stihl Tool", "Farming Equipment", 4200.0, 12, 4.7, "Battery operated 16L knapsack sprayer with brass nozzle.", "⚙️"),
-            StoreProduct("p5", "Bayer Confidor Insecticide 250ml", "Bayer", "Pesticides", 520.0, 30, 4.8, "Fast protection against sucking pests in onions and tomatoes.", "🐛")
-        )
-    }
+    val storeProducts = remember { mutableStateListOf<StoreProduct>() }
 
-    val labourTeams = remember {
-        mutableStateListOf(
-            LabourTeam("l1", "Maruti Labour Squad", "Kisan Mukhya Mukkadam", "+91 98112 33445", "Narayangaon", 2.5, "Sugarcane & Onion harvesting experts", 8, 400.0, 4.9, "Available"),
-            LabourTeam("l2", "Jay Malhar Shetmajur Tokoli", "Ganesh Mukkadam", "+91 97665 44332", "Ozar", 4.8, "Weeding, spraying & transplanting specialists", 6, 380.0, 4.7, "Available"),
-            LabourTeam("l3", "Shree Ram Farm Labour Gang", "Prakash Thorat", "+91 94210 99887", "Alephata", 6.2, "Heavy tilling, loading & tractor work", 10, 450.0, 4.8, "Available")
-        )
-    }
+    val labourTeams = remember { mutableStateListOf<LabourTeam>() }
 
-    val contractList = remember {
-        mutableStateListOf(
-            ContractFarming("cf1", "Sahyadri Farmers Producer Co.", "Export Red Onions", "N-53 / Garwa", "100 Tons", 2200.0, "Grade A, Size 45-60mm, Max moisture 10%", "Sept - Oct 2026", "Junnar Cluster", "Open"),
-            ContractFarming("cf2", "PepsiCo India Processing", "Chip Potato (FC-5)", "FC-5 White", "50 Tons", 1850.0, "High dry matter content, zero greening", "Nov 2026", "Pune District", "Open"),
-            ContractFarming("cf3", "Tata Rallis Agri Corp", "Sweet Corn Harvest", "Sugar-75", "25 Tons", 2800.0, "Fresh green cobs with uniform kernel fill", "Aug - Sept 2026", "Ambegaon / Junnar", "Open")
-        )
-    }
+    val contractList = remember { mutableStateListOf<ContractFarming>() }
 
-    val brokerDemands = remember {
-        mutableStateListOf(
-            BrokerDemand("b1", "Sunil Deshmukh (APMC Trader)", "Deshmukh Agro Junnar", "+91 94220 84521", "Pune Red Onions", "200 Quintals", 2000.0, "Junnar Market Yard", "Instant UPI / Cash on Delivery", "Active Demand"),
-            BrokerDemand("b2", "Suresh Traders & Exporters", "Suresh Global Pune", "+91 98901 12345", "Indrayani Scented Rice", "100 Quintals", 4350.0, "Market Yard Gate 4, Pune", "3-Day Direct Bank Transfer", "Active Demand")
-        )
-    }
+    val brokerDemands = remember { mutableStateListOf<BrokerDemand>() }
 
-    val directProduceList = remember {
-        mutableStateListOf(
-            DirectProduceListing("dp1", "Fresh Organic Red Onions", 15.0, "Quintal", 22.0, "Grade A Organic", "Ready Harvest", "Direct farm fresh onions, no chemical storage spray.", "Active")
-        )
-    }
+    val directProduceList = remember { mutableStateListOf<DirectProduceListing>() }
 
-    val notificationsList = remember {
-        mutableStateListOf(
-            FarmerNotification("n1", "Labour Request Accepted! 👨‍🌾", "Maruti Labour Squad (8 workers) confirmed for 15th August for Onion Harvesting.", "10 mins ago", "Labour", isRead = false),
-            FarmerNotification("n2", "Contract Farming Application Update 🤝", "Sahyadri Farmers Producer Co. reviewed your 100 Ton Onion contract request.", "2 hours ago", "Contract", isRead = false),
-            FarmerNotification("n3", "New Broker Demand Posted 📈", "Deshmukh Agro offered ₹2000/Quintal for Red Onions in Junnar Market Yard.", "Yesterday", "Broker", isRead = true),
-            FarmerNotification("n4", "AI Crop Disease Scan Complete 🤖", "Purple Blotch detected on Onion sample. Remedy recommended in Agri Store.", "2 days ago", "AI Disease", isRead = true)
-        )
-    }
+    val notificationsList = remember { mutableStateListOf<FarmerNotification>() }
 
-    val savedDiseaseScans = remember {
-        mutableStateListOf(
-            SavedDiseaseScan(
-                id = "scan_01",
-                cropName = "Tomato",
-                diseaseName = "Tomato Early Blight",
-                confidence = "High",
-                severity = "Moderate",
-                symptoms = listOf(
-                    "Dark brown to black concentric ring spots on older lower leaves",
-                    "Yellow chlorotic halo surrounding necrotic lesions",
-                    "Premature leaf yellowing and defoliation"
-                ),
-                possibleCauses = listOf(
-                    "Alternaria solani fungal pathogen",
-                    "High humidity and prolonged leaf wetness",
-                    "Overhead sprinkler irrigation splashing soil onto foliage"
-                ),
-                recommendedAction = listOf(
-                    "Prune and safely destroy infected lower foliage",
-                    "Apply Chlorothalonil 75% WP @ 2g/L or Mancozeb fungicide spray",
-                    "Switch to drip irrigation to keep upper canopy dry"
-                ),
-                prevention = listOf(
-                    "Practice 3-year crop rotation with non-solanaceous crops",
-                    "Maintain 60cm row spacing for optimal air circulation",
-                    "Stake vines to prevent contact with bare soil"
-                ),
-                imageQuality = "good",
-                imageBitmap = SampleLeafGenerator.createSampleLeafBitmap("Tomato"),
-                formattedDate = "14 Aug 2026, 10:30 AM"
-            ),
-            SavedDiseaseScan(
-                id = "scan_02",
-                cropName = "Pune Red Onion",
-                diseaseName = "Purple Blotch (Alternaria porri)",
-                confidence = "High",
-                severity = "Moderate",
-                symptoms = listOf(
-                    "Small water-soaked lesions developing into elliptical purple-brown spots",
-                    "Concentric light and dark zones with a distinct yellow halo",
-                    "Leaves girdling and falling over prematurely"
-                ),
-                possibleCauses = listOf(
-                    "Alternaria porri fungal spores",
-                    "Warm temperatures (25-30°C) with relative humidity above 80%",
-                    "Thrips injury providing entry points for spores"
-                ),
-                recommendedAction = listOf(
-                    "Spray Mancozeb 75% WP @ 2.5g/L mixed with an agricultural sticker",
-                    "Apply Azoxystrobin 23% SC @ 1ml/L in severe cases",
-                    "Ensure adequate field drainage"
-                ),
-                prevention = listOf(
-                    "Treat seeds with Thiram or Carbendazim before sowing",
-                    "Avoid excessive nitrogen fertilization",
-                    "Control thrips infestations early"
-                ),
-                imageQuality = "good",
-                imageBitmap = SampleLeafGenerator.createSampleLeafBitmap("Onion"),
-                formattedDate = "09 Aug 2026, 04:15 PM"
-            )
-        )
-    }
+    val savedDiseaseScans = remember { mutableStateListOf<SavedDiseaseScan>() }
 
     // Active Cart
-    var cartCount by remember { mutableStateOf(1) }
+    var cartCount by remember { mutableStateOf(0) }
 
     Scaffold(
         bottomBar = {

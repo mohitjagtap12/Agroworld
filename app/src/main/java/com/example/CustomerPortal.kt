@@ -1,6 +1,7 @@
 package com.example
 
 import android.widget.Toast
+import com.example.network.SessionManager
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
@@ -118,58 +119,21 @@ fun CustomerPortalScreen(navController: NavController) {
     var searchKeyword by remember { mutableStateOf("") }
 
     // Crop database
-    val cropsList = remember {
-        mutableStateListOf(
-            CustomerCropItem("crop1", "Pune Red Onions", "Ramesh Patil", "Wagholi", "Haveli", "Vegetables", 1850.0, "Quintal", 15.0, 4.8, "Perfectly graded sun-dried premium red onions from our fields in Wagholi. No chemical coloring used.", "🧅"),
-            CustomerCropItem("crop2", "Alphonso Mangoes", "Vilasrao Deshmukh", "Junnar Hills", "Junnar", "Fruits", 450.0, "Dozen", 80.0, 4.9, "Extremely sweet, aromatic devgad-clone Alphonso mangoes, hand-picked with care.", "🥭"),
-            CustomerCropItem("crop3", "Indrayani Scented Rice", "Sanjay Gawade", "Kamshet", "Maval", "Grains", 4200.0, "Quintal", 25.0, 4.7, "Highly aromatic traditional Indrayani scented paddy from Western Ghat streams.", "🌾"),
-            CustomerCropItem("crop4", "Spicy Guntur Chillies", "Babasaheb Kudale", "Talegaon", "Khed", "Spices", 250.0, "Kg", 120.0, 4.6, "Super spicy, sun-dried red chillies with rich capsicum oil content.", "🌶️"),
-            CustomerCropItem("crop5", "Organic Turmeric Pods", "Dnyaneshwar Hande", "Baramati Agro", "Baramati", "Spices", 180.0, "Kg", 50.0, 4.9, "Pure steam-distilled yellow turmeric finger roots high in curcumin content.", "🫚"),
-            CustomerCropItem("crop6", "Fresh Green Broccoli", "Tanaji Rao", "Khed Shivapur", "Khed", "Vegetables", 120.0, "Kg", 40.0, 4.5, "Crisp exotic Italian broccoli grown under modern polyhouse shade nets.", "🥦"),
-            CustomerCropItem("crop7", "Golden Wheat Lokwan", "Santosh Kadam", "Shirur", "Shirur", "Grains", 2900.0, "Quintal", 18.0, 4.8, "Heavy premium heavy-density Lokwan wheat, stone-cleaned & ready for rotis.", "🌾"),
-            CustomerCropItem("crop8", "Suryamukhi Sunflower Seeds", "Vitthal Shelar", "Indapur", "Indapur", "Grains", 80.0, "Kg", 300.0, 4.4, "High oil yield dry organic sunflower seeds directly harvested.", "🌻")
-        )
-    }
+    val cropsList = remember { mutableStateListOf<CustomerCropItem>() }
 
     // Selected Crop for details view
-    var selectedCropId by remember { mutableStateOf("crop1") }
+    var selectedCropId by remember { mutableStateOf("") }
 
     // Active Cart List
     val cartList = remember { mutableStateListOf<CustomerCartItem>() }
 
     // My Orders List
-    val ordersList = remember {
-        mutableStateListOf(
-            CustomerOrderItem("ORD-9821", "Pune Red Onions", "🧅", "Ramesh Patil", 2.0, "Quintal", 3700.0, "Pending", "17 July 2026", "Kothrud Heights, Flat 402, Pune"),
-            CustomerOrderItem("ORD-5412", "Alphonso Mangoes", "🥭", "Vilasrao Deshmukh", 5.0, "Dozen", 2250.0, "Confirmed", "15 July 2026", "Kothrud Heights, Flat 402, Pune"),
-            CustomerOrderItem("ORD-1092", "Indrayani Scented Rice", "🌾", "Sanjay Gawade", 1.0, "Quintal", 4200.0, "Delivered", "10 July 2026", "Kothrud Heights, Flat 402, Pune")
-        )
-    }
-    var selectedOrderId by remember { mutableStateOf("ORD-9821") }
+    val ordersList = remember { mutableStateListOf<CustomerOrderItem>() }
+    var selectedOrderId by remember { mutableStateOf("") }
 
     // Dynamic Chat database
-    val chatSessions = remember {
-        mutableStateListOf(
-            CustChatSession(
-                "chat_f1", "Ramesh Patil", "Wagholi, Pune", "Pune Red Onions", "Alright, I will keep 2 Quintals aside for you.", "11:45 AM", true,
-                listOf(
-                    CustChatMessage("Farmer", "Ram Ram! Yes, the red onions are freshly sorted.", "Yesterday"),
-                    CustChatMessage("Me", "Can I get 2 Quintals delivered tomorrow?", "Yesterday"),
-                    CustChatMessage("Farmer", "Sure, I am sending a loading pickup to Pune market yard.", "11:42 AM"),
-                    CustChatMessage("Me", "Perfect. Let me make the payment on the app.", "11:44 AM"),
-                    CustChatMessage("Farmer", "Alright, I will keep 2 Quintals aside for you.", "11:45 AM")
-                )
-            ),
-            CustChatSession(
-                "chat_f2", "Vilasrao Deshmukh", "Junnar Hills", "Alphonso Mangoes", "Yes, they are naturally ripened without carbide.", "Yesterday", false,
-                listOf(
-                    CustChatMessage("Me", "Are these Junnar mangoes naturally ripened?", "Yesterday"),
-                    CustChatMessage("Farmer", "Yes, they are naturally ripened without carbide. 100% safe for kids.", "Yesterday")
-                )
-            )
-        )
-    }
-    var selectedChatPartnerId by remember { mutableStateOf("chat_f1") }
+    val chatSessions = remember { mutableStateListOf<CustChatSession>() }
+    var selectedChatPartnerId by remember { mutableStateOf("") }
 
     // Portal Stage: "otp_verification", "registration", "success", "dashboard"
     var currentPortalStage by remember { mutableStateOf("otp_verification") }
@@ -188,9 +152,9 @@ fun CustomerPortalScreen(navController: NavController) {
     val regSelectedCategories = remember { mutableStateListOf<String>() }
 
     // User Profile Information
-    var customerName by remember { mutableStateOf("Abhishek Sharma") }
-    var customerPhone by remember { mutableStateOf("+91 98765 43210") }
-    var savedAddress by remember { mutableStateOf("Flat 402, Building B, Kothrud Heights, Pune - 411038") }
+    var customerName by remember { mutableStateOf(SessionManager.getInstance(context).userName.ifEmpty { "Customer" }) }
+    var customerPhone by remember { mutableStateOf(SessionManager.getInstance(context).userPhone.ifEmpty { "+91 ----------" }) }
+    var savedAddress by remember { mutableStateOf(SessionManager.getInstance(context).userVillage.ifEmpty { "Address / Delivery Location" }) }
     var userLanguage by remember { mutableStateOf("English (Default)") }
 
     Scaffold(

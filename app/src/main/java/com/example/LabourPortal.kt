@@ -1,6 +1,7 @@
 package com.example
 
 import android.widget.Toast
+import com.example.network.SessionManager
 import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -47,17 +48,17 @@ fun LabourPortalScreen(navController: NavController) {
     // Bottom Nav items: "home", "requests", "my_jobs", "profile"
     var currentTab by remember { mutableStateOf("home") }
 
-    // Active Labour Profile State (Logged in as Ramesh Ghadge / Maruti Squad)
-    val currentWorkerId = "lab_1"
-    var leaderName by remember { mutableStateOf("Ramesh Ghadge (Mukkadam)") }
-    var squadName by remember { mutableStateOf("Maruti Farm Labour Squad") }
-    var phone by remember { mutableStateOf("+91 98221 44556") }
-    var village by remember { mutableStateOf("Narayangaon") }
-    var taluka by remember { mutableStateOf("Junnar") }
-    var district by remember { mutableStateOf("Pune") }
-    var experienceYears by remember { mutableStateOf("5 Years") }
-    var teamSize by remember { mutableStateOf("8 Workers") }
-    var dailyWage by remember { mutableStateOf("₹500 / worker / day") }
+    // Active Labour Profile State
+    val currentWorkerId = remember { SessionManager.getInstance(context).userId.ifEmpty { "labour_current" } }
+    var leaderName by remember { mutableStateOf(SessionManager.getInstance(context).userName.ifEmpty { "Farm Labour Leader" }) }
+    var squadName by remember { mutableStateOf("Local Farm Labour Squad") }
+    var phone by remember { mutableStateOf(SessionManager.getInstance(context).userPhone.ifEmpty { "+91 ----------" }) }
+    var village by remember { mutableStateOf(SessionManager.getInstance(context).userVillage.ifEmpty { "Village" }) }
+    var taluka by remember { mutableStateOf("") }
+    var district by remember { mutableStateOf(SessionManager.getInstance(context).userDistrict.ifEmpty { "District" }) }
+    var experienceYears by remember { mutableStateOf("3 Years") }
+    var teamSize by remember { mutableStateOf("6 Workers") }
+    var dailyWage by remember { mutableStateOf("₹450 / worker / day") }
     var isAvailable by remember { mutableStateOf(true) }
     var workingRadiusKm by remember { mutableStateOf(15) }
     var availableDates by remember { mutableStateOf("All Days (Available)") }
@@ -73,7 +74,7 @@ fun LabourPortalScreen(navController: NavController) {
 
     // Sync requests from shared repository
     val allJobRequests = AgroWorldLabourRepository.jobRequests
-    val myJobRequests = allJobRequests.filter { it.labourId == currentWorkerId || it.labourId == "all" }
+    val myJobRequests = allJobRequests.filter { it.labourId == currentWorkerId || it.labourId.isEmpty() || it.labourId == "all" || it.labourId == "labour_current" }
 
     val pendingRequests = myJobRequests.filter { it.status == "Pending" }
     val activeJobs = myJobRequests.filter { it.status == "Confirmed" || it.status == "Scheduled" || it.status == "In Progress" }

@@ -3,8 +3,8 @@ package com.example.network.interceptor;
 import android.content.Context;
 import androidx.annotation.NonNull;
 
-import com.example.model.CropModel;
 import com.example.model.DeliveryJob;
+import com.example.model.FarmerCrop;
 import com.example.network.SessionManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -61,10 +61,10 @@ public class MockBackendInterceptor implements Interceptor {
 
         if (path.contains("/api/farmer/crops")) {
             if ("GET".equalsIgnoreCase(method)) {
-                List<CropModel> crops = new ArrayList<>();
-                crops.add(new CropModel("crop_01", "Sugarcane", "Co 86032", 3.5, "Acres", "2025-10-15", "2026-10-20", "North Plot", "Growing", 0.72));
-                crops.add(new CropModel("crop_02", "Tomato", "Abhinav Hybrid", 1.5, "Acres", "2026-01-10", "2026-04-15", "Polyhouse Unit 2", "Flowering", 0.45));
-                crops.add(new CropModel("crop_03", "Wheat", "Lokwan 147", 2.0, "Acres", "2025-11-20", "2026-03-25", "South Canal Plot", "Ready for Harvest", 0.95));
+                List<FarmerCrop> crops = new ArrayList<>();
+                crops.add(new FarmerCrop("crop_01", "Sugarcane", "Co 86032", "Cash Crop", "3.5", "Acres", "2025-10-15", "2026-10-20", "Drip", 150.0, 3200.0, "High sucrose yield variety", "Growing", "🌾"));
+                crops.add(new FarmerCrop("crop_02", "Tomato", "Abhinav Hybrid", "Vegetables", "1.5", "Acres", "2026-01-10", "2026-04-15", "Drip", 35.0, 1800.0, "Polyhouse table crop", "Flowering", "🍅"));
+                crops.add(new FarmerCrop("crop_03", "Wheat", "Lokwan 147", "Grains", "2.0", "Acres", "2025-11-20", "2026-03-25", "Canal", 40.0, 2400.0, "Premium grade durum wheat", "Ready for Harvest", "🌾"));
 
                 Map<String, Object> body = new HashMap<>();
                 body.put("success", true);
@@ -75,7 +75,7 @@ public class MockBackendInterceptor implements Interceptor {
                 Map<String, Object> body = new HashMap<>();
                 body.put("success", true);
                 body.put("message", "Crop registered successfully");
-                body.put("data", new CropModel("crop_new", "Soybean", "JS 335", 2.5, "Acres", "2026-06-15", "2026-10-10", "Field 3", "Growing", 0.3));
+                body.put("data", new FarmerCrop("crop_new", "Soybean", "JS 335", "Oilseeds", "2.5", "Acres", "2026-06-15", "2026-10-10", "Rainfed", 25.0, 4500.0, "Field 3 sowing", "Growing", "🌱"));
                 jsonResult = gson.toJson(body);
             }
         } else if (path.contains("/api/auth/login")) {

@@ -3,6 +3,7 @@ package com.example
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
+import com.example.network.SessionManager
 import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -65,10 +66,10 @@ fun FarmerLabourHubScreen(
     var wageAmount by remember { mutableStateOf("500") }
     var paymentTerms by remember { mutableStateOf("Daily Cash") }
 
-    var village by remember { mutableStateOf("Narayangaon") }
-    var taluka by remember { mutableStateOf("Junnar") }
-    var district by remember { mutableStateOf("Pune") }
-    var farmLocation by remember { mutableStateOf("Plot No. 4, Canal Road") }
+    var village by remember { mutableStateOf(SessionManager.getInstance(context).userVillage.ifEmpty { "" }) }
+    var taluka by remember { mutableStateOf(SessionManager.getInstance(context).userTaluka.ifEmpty { "Haveli" }) }
+    var district by remember { mutableStateOf(SessionManager.getInstance(context).userDistrict.ifEmpty { "Pune" }) }
+    var farmLocation by remember { mutableStateOf("") }
     var searchRadiusKm by remember { mutableStateOf(10) }
 
     var specialInstructions by remember { mutableStateOf("Experienced sugarcane harvesting workers preferred. Sharp koyta/sickles required.") }

@@ -1,6 +1,7 @@
 package com.example
 
 import android.widget.Toast
+import com.example.network.SessionManager
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
@@ -122,12 +123,12 @@ fun SellerPortalScreen(navController: NavController) {
     val regSelectedServices = remember { mutableStateListOf<String>("Fertilizers", "Pesticides") }
 
     // Dynamic Registered Seller State
-    var ownerName by remember { mutableStateOf("Sunil Deshmukh") }
-    var verifiedPhone by remember { mutableStateOf("+91 20 2445 9999") }
-    var shopName by remember { mutableStateOf("Kisan Seva Agri-Mall") }
+    var ownerName by remember { mutableStateOf(SessionManager.getInstance(context).userName.ifEmpty { "Agri-Store Seller" }) }
+    var verifiedPhone by remember { mutableStateOf(SessionManager.getInstance(context).userPhone.ifEmpty { "+91 ----------" }) }
+    var shopName by remember { mutableStateOf("AgroWorld Verified Krushi Seva Kendra") }
     var shopCategory by remember { mutableStateOf("Fertilizers") }
-    var shopVillage by remember { mutableStateOf("APMC Market Yard Area") }
-    var shopTaluka by remember { mutableStateOf("Pune") }
+    var shopVillage by remember { mutableStateOf(SessionManager.getInstance(context).userVillage.ifEmpty { "Market Area" }) }
+    var shopTaluka by remember { mutableStateOf(SessionManager.getInstance(context).userDistrict.ifEmpty { "" }) }
     var servicesOffered by remember { mutableStateOf("Fertilizers, Pesticides, Seeds, Organic Products, Farming Tools") }
     var shopLogoUriState by remember { mutableStateOf<Uri?>(null) }
 
@@ -136,45 +137,16 @@ fun SellerPortalScreen(navController: NavController) {
     var currentScreen by remember { mutableStateOf("dashboard") }
 
     // Dynamic Database lists in memory
-    val sellerProducts = remember {
-        mutableStateListOf(
-            SellerProduct("sp_1", "IFFCO Urea Fertilizer", "Fertilizers", "IFFCO", "High quality nitrogenous fertilizer for excellent vegetation and vegetative growth of all crops.", 295.0, 150, "Bag", "12/05/2026", "11/05/2029", "🌱"),
-            SellerProduct("sp_2", "Bayer Confidor Insecticide", "Pesticides", "Bayer CropScience", "Imidacloprid 17.8% SL. Highly effective system insecticide for sucking pests.", 450.0, 8, "Bottle", "02/04/2026", "01/04/2028", "🧴"),
-            SellerProduct("sp_3", "Mahyco Hybrid Bajra Seeds", "Seeds", "Mahyco", "High-yield hybrid pearl millet seeds. Drought resistant and sturdy grains.", 550.0, 85, "Packet", "10/06/2026", "09/06/2027", "🌾"),
-            SellerProduct("sp_4", "Multiplex Organic Vermicompost", "Organic Products", "Multiplex", "Enriched organic manure with millions of beneficial nitrogen-fixing microbes.", 320.0, 45, "Bag", "01/01/2026", "31/12/2028", "🪵"),
-            SellerProduct("sp_5", "Falcon Premium Pruning Shears", "Farming Tools", "Falcon", "Heavy duty carbon steel bypass pruning shears for clean cuts on crops & trees.", 850.0, 12, "Piece", "15/03/2026", "N/A", "✂️"),
-            SellerProduct("sp_6", "Tata Paras DAP 18:46", "Fertilizers", "Tata Chemicals", "Premium di-ammonium phosphate supply to enhance root strength and tillering.", 1350.0, 3, "Bag", "18/05/2026", "17/05/2029", "🌾") // Low stock!
-        )
-    }
+    val sellerProducts = remember { mutableStateListOf<SellerProduct>() }
 
-    val sellerOrders = remember {
-        mutableStateListOf(
-            SellerOrder("so_101", "Balasaheb Jadhav", "IFFCO Urea Fertilizer", 10, "Bag", 295.0, 2950.0, "18 July 2026", "Gat No. 42, Khed Village, Pune Rural, Maharashtra - 410505", "New"),
-            SellerOrder("so_102", "Ananda Jagtap", "Bayer Confidor Insecticide", 3, "Bottle", 450.0, 1350.0, "17 July 2026", "Shree Krupa Farm, Baramati, Pune - 413102", "Processing"),
-            SellerOrder("so_103", " Tukaram Shinde", "Mahyco Hybrid Bajra Seeds", 5, "Packet", 550.0, 2750.0, "16 July 2026", "Taluka Junnar, Narayangaon Area, Pune - 410504", "Completed"),
-            SellerOrder("so_104", "Sanjay Gawade", "Multiplex Organic Vermicompost", 2, "Bag", 320.0, 640.0, "15 July 2026", "Kamshet Station Rd, Maval Taluka, Pune - 410405", "Completed")
-        )
-    }
+    val sellerOrders = remember { mutableStateListOf<SellerOrder>() }
 
-    val sellerSalesHistory = remember {
-        mutableStateListOf(
-            SellerSaleRecord("ssr_1", "18 July 2026", "Falcon Premium Pruning Shears", "Farming Tools", 1, 850.0, "Dnyaneshwar Hande"),
-            SellerSaleRecord("ssr_2", "17 July 2026", "Mahyco Hybrid Bajra Seeds", "Seeds", 4, 2200.0, "Ananda Jagtap"),
-            SellerSaleRecord("ssr_3", "16 July 2026", "IFFCO Urea Fertilizer", "Fertilizers", 20, 5900.0, "Ramesh Patil"),
-            SellerSaleRecord("ssr_4", "15 July 2026", "Bayer Confidor Insecticide", "Pesticides", 2, 900.0, "Sanjay Gawade"),
-            SellerSaleRecord("ssr_5", "14 July 2026", "Multiplex Organic Vermicompost", "Organic Products", 10, 3200.0, "Vilasrao Deshmukh")
-        )
-    }
+    val sellerSalesHistory = remember { mutableStateListOf<SellerSaleRecord>() }
 
-    val sellerOffers = remember {
-        mutableStateListOf(
-            SellerOffer("sof_1", "Monsoon Blast Seeds Discount", 15, "15 July 2026", "31 August 2026", "Active"),
-            SellerOffer("sof_2", "Organic Farming Promo Special", 10, "18 July 2026", "15 August 2026", "Active")
-        )
-    }
+    val sellerOffers = remember { mutableStateListOf<SellerOffer>() }
 
     // Dynamic Selected Item States
-    var selectedOrderId by remember { mutableStateOf("so_101") }
+    var selectedOrderId by remember { mutableStateOf("") }
 
     // Navigation and Layout Wrapper
     Scaffold(

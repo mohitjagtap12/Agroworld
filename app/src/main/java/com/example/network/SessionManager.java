@@ -54,31 +54,35 @@ public class SessionManager {
     }
 
     public String getUserId() {
-        return prefs.getString(KEY_USER_ID, "usr_farmer_01");
+        return prefs.getString(KEY_USER_ID, "");
     }
 
     public String getUserName() {
-        return prefs.getString(KEY_USER_NAME, "Ramesh Patil");
+        return prefs.getString(KEY_USER_NAME, "");
     }
 
     public String getUserPhone() {
-        return prefs.getString(KEY_USER_PHONE, "9876543210");
+        return prefs.getString(KEY_USER_PHONE, "");
     }
 
     public String getUserRole() {
-        return prefs.getString(KEY_USER_ROLE, "farmer");
+        return prefs.getString(KEY_USER_ROLE, "");
     }
 
     public String getUserVillage() {
-        return prefs.getString(KEY_USER_VILLAGE, "Baramati");
+        return prefs.getString(KEY_USER_VILLAGE, "");
+    }
+
+    public String getUserTaluka() {
+        return prefs.getString("user_taluka", "");
     }
 
     public String getUserDistrict() {
-        return prefs.getString(KEY_USER_DISTRICT, "Pune");
+        return prefs.getString(KEY_USER_DISTRICT, "");
     }
 
     public boolean isLoggedIn() {
-        return prefs.getBoolean(KEY_IS_LOGGED_IN, true);
+        return prefs.getBoolean(KEY_IS_LOGGED_IN, false);
     }
 
     public String getBaseUrl() {

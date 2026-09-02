@@ -1,6 +1,7 @@
 package com.example
 
 import android.widget.Toast
+import com.example.network.SessionManager
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
@@ -77,90 +78,18 @@ fun CompanyPortalScreen(navController: NavController) {
     var currentSubScreen by remember { mutableStateOf("contracts") }
 
     // Company Profile
-    var companyName by remember { mutableStateOf("Sahyadri Farmers Producer Co. Ltd.") }
+    var companyName by remember { mutableStateOf(SessionManager.getInstance(context).userName.ifEmpty { "Agri-Enterprise Co." }) }
     var businessType by remember { mutableStateOf("Agri-Export & Food Processing") }
-    var contactPerson by remember { mutableStateOf("Vikram Thorat (Procurement Head)") }
-    var phone by remember { mutableStateOf("+91 20 2554 8899") }
-    var location by remember { mutableStateOf("Pune Cluster & Nashik Highway") }
-    var fssaiNumber by remember { mutableStateOf("FSSAI #11520038000142") }
+    var contactPerson by remember { mutableStateOf(SessionManager.getInstance(context).userName.ifEmpty { "Procurement Lead" }) }
+    var phone by remember { mutableStateOf(SessionManager.getInstance(context).userPhone.ifEmpty { "+91 ----------" }) }
+    var location by remember { mutableStateOf(SessionManager.getInstance(context).userDistrict.ifEmpty { "Agro Cluster" }) }
+    var fssaiNumber by remember { mutableStateOf("FSSAI Registered") }
 
     // Contracts in Memory
-    val contractsList = remember {
-        mutableStateListOf(
-            PublishedContract(
-                id = "cf_01",
-                companyName = "Sahyadri Farmers Producer Co. Ltd.",
-                cropName = "Pune Red Onions",
-                variety = "N-53 Grade A",
-                requiredQuantityTons = 100.0,
-                offeredPricePerTon = 22000.0,
-                harvestPeriod = "Sept - Oct 2026",
-                targetLocation = "Junnar, Ambegaon & Khed Clusters",
-                qualityRequirements = "Bulb diameter 45-65mm, tight skin, maximum 10% moisture.",
-                termsAndConditions = "25% advance payment on contract signing, 100% buyback guarantee at designated collection center.",
-                advancePaymentPercent = 25,
-                status = "Active",
-                datePublished = "10 Aug 2026"
-            ),
-            PublishedContract(
-                id = "cf_02",
-                companyName = "Sahyadri Farmers Producer Co. Ltd.",
-                cropName = "Chip Processing Potatoes",
-                variety = "FC-5 White Flesh",
-                requiredQuantityTons = 50.0,
-                offeredPricePerTon = 18500.0,
-                harvestPeriod = "Nov 2026",
-                targetLocation = "Manchar & Narayangaon Belt",
-                qualityRequirements = "High specific gravity (>1.080), low reducing sugars (<0.1%), zero greening.",
-                termsAndConditions = "Certified seed supplied at 50% subsidized advance. Full harvest collected from farm gate.",
-                advancePaymentPercent = 30,
-                status = "Active",
-                datePublished = "05 Aug 2026"
-            )
-        )
-    }
+    val contractsList = remember { mutableStateListOf<PublishedContract>() }
 
     // Farmer Applications in Memory
-    val farmerApplications = remember {
-        mutableStateListOf(
-            FarmerContractApplication(
-                id = "app_01",
-                contractId = "cf_01",
-                cropName = "Pune Red Onions",
-                farmerName = "Ramesh Patil",
-                farmerPhone = "+91 98220 14589",
-                village = "Narayangaon, Junnar",
-                committedAcreage = 2.5,
-                projectedYieldTons = 30.0,
-                appliedDate = "12 Aug 2026",
-                applicationStatus = "Pending Review"
-            ),
-            FarmerContractApplication(
-                id = "app_02",
-                contractId = "cf_01",
-                cropName = "Pune Red Onions",
-                farmerName = "Baburao Shinde",
-                farmerPhone = "+91 94220 55678",
-                village = "Alephata, Junnar",
-                committedAcreage = 4.0,
-                projectedYieldTons = 48.0,
-                appliedDate = "11 Aug 2026",
-                applicationStatus = "Approved"
-            ),
-            FarmerContractApplication(
-                id = "app_03",
-                contractId = "cf_02",
-                cropName = "Chip Processing Potatoes",
-                farmerName = "Ganesh Mandhare",
-                farmerPhone = "+91 94220 12345",
-                village = "Ozar, Junnar",
-                committedAcreage = 3.0,
-                projectedYieldTons = 36.0,
-                appliedDate = "08 Aug 2026",
-                applicationStatus = "Pending Review"
-            )
-        )
-    }
+    val farmerApplications = remember { mutableStateListOf<FarmerContractApplication>() }
 
     Scaffold(
         topBar = {

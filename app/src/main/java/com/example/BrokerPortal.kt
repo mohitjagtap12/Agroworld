@@ -1,6 +1,7 @@
 package com.example
 
 import android.widget.Toast
+import com.example.network.SessionManager
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
@@ -134,59 +135,15 @@ fun BrokerPortalScreen(navController: NavController) {
     var currentScreen by remember { mutableStateOf("dashboard") }
 
     // Dynamic Database lists in memory
-    val cropListings = remember {
-        mutableStateListOf(
-            BrokerCropListing("bcl_1", "Indrayani Scented Paddy", "Sanjay Gawade", "Kamshet", "Maval", 4100.0, "Quintal", 120.0, "Premium aromatic Indrayani rice paddy. Moister level perfect around 11%. Dry stored in bags.", "🌾", 4.7),
-            BrokerCropListing("bcl_2", "Pune Red Onions", "Ramesh Patil", "Wagholi", "Haveli", 1800.0, "Quintal", 450.0, "Graded medium to large red onions, cured in dry shade for 15 days.", "🧅", 4.8),
-            BrokerCropListing("bcl_3", "Alphonso Mangoes (Grade-A)", "Vilasrao Deshmukh", "Junnar Hills", "Junnar", 420.0, "Dozen", 180.0, "Export quality organic Alphonso mangoes ready to load in wooden boxes.", "🥭", 4.9),
-            BrokerCropListing("bcl_4", "Organic Turmeric Finger", "Dnyaneshwar Hande", "Baramati Agro", "Baramati", 175.0, "Kg", 8000.0, "Steam-dried turmeric fingers high in curcumin. Excellent uniform yellow color.", "🫚", 4.9),
-            BrokerCropListing("bcl_5", "Lokwan Durum Wheat", "Santosh Kadam", "Shirur", "Shirur", 2800.0, "Quintal", 250.0, "Heavy dry golden Lokwan wheat from recent winter harvest. Ready for flour mills.", "🌾", 4.8)
-        )
-    }
+    val cropListings = remember { mutableStateListOf<BrokerCropListing>() }
 
-    val customerRequests = remember {
-        mutableStateListOf(
-            BrokerCustomerRequest("bcr_1", "Reliance Smart Agri", "Pune Red Onions", 300.0, "Quintal", "Haveli", 1850.0),
-            BrokerCustomerRequest("bcr_2", "Maha Exports Ltd", "Alphonso Mangoes (Grade-A)", 100.0, "Dozen", "Junnar", 440.0),
-            BrokerCustomerRequest("bcr_3", "Organic Mills Pune", "Organic Turmeric Finger", 5000.0, "Kg", "Baramati", 180.0),
-            BrokerCustomerRequest("bcr_4", "Lokwan Wheat Flour Co.", "Lokwan Durum Wheat", 200.0, "Quintal", "Shirur", 2850.0)
-        )
-    }
+    val customerRequests = remember { mutableStateListOf<BrokerCustomerRequest>() }
 
-    val brokerDeals = remember {
-        mutableStateListOf(
-            BrokerDeal("deal_101", "Ramesh Patil", "Reliance Smart Agri", "Pune Red Onions", 200.0, "Quintal", 1800.0, 360000.0, "Ongoing", "16 July 2026", "Wagholi", "Haveli"),
-            BrokerDeal("deal_102", "Sanjay Gawade", "Sujay Agro Center", "Indrayani Scented Paddy", 50.0, "Quintal", 4100.0, 205000.0, "Completed", "14 July 2026", "Kamshet", "Maval"),
-            BrokerDeal("deal_103", "Vilasrao Deshmukh", "Maha Exports Ltd", "Alphonso Mangoes (Grade-A)", 40.0, "Dozen", 420.0, 16800.0, "Pending", "18 July 2026", "Junnar Hills", "Junnar")
-        )
-    }
+    val brokerDeals = remember { mutableStateListOf<BrokerDeal>() }
 
-    val broadcastRequests = remember {
-        mutableStateListOf(
-            BrokerBroadcastRequest("br_1", "Premium Grains Wheat", "Grains", 100.0, "Quintal", 2800.0, "25 July 2026", "Shirur", "Looking for clean, dry Lokwan wheat in bulk. Immediate cash settlement.", "Active", 3, listOf("Santosh Kadam", "Mahadev Naik", "Dharma Rao")),
-            BrokerBroadcastRequest("br_2", "Sugarcane bulk buy", "Cash Crop", 200.0, "Ton", 3100.0, "30 July 2026", "Baramati", "Need early-crushing sugarcane with high recovery percentage.", "Active", 1, listOf("Ananda Jagtap"))
-        )
-    }
+    val broadcastRequests = remember { mutableStateListOf<BrokerBroadcastRequest>() }
 
-    val chatSessions = remember {
-        mutableStateListOf(
-            BrokerChatSession(
-                "chat_bs1", "Ramesh Patil", "Farmer", "Please arrange the mini truck for transport.", "12:15 PM", true, "Pune Red Onions",
-                listOf(
-                    BrokerChatMessage("Farmer:Ramesh Patil", "Hello Deshmukh Saheb, did the onion deal finalize?", "12:01 PM"),
-                    BrokerChatMessage("Me", "Yes Rameshji, Reliance Smart agreed at ₹1,800/Quintal.", "12:05 PM"),
-                    BrokerChatMessage("Farmer:Ramesh Patil", "Excellent. Please arrange the mini truck for transport.", "12:15 PM")
-                )
-            ),
-            BrokerChatSession(
-                "chat_bs2", "Reliance Procurement", "Customer", "We sent the deposit token of ₹50k.", "Yesterday", false, "Bulk Red Onions",
-                listOf(
-                    BrokerChatMessage("Me", "We have a graded red onion lot ready in Wagholi taluka.", "Yesterday"),
-                    BrokerChatMessage("Customer:Reliance Procurement", "Perfect. We sent the deposit token of ₹50k.", "Yesterday")
-                )
-            )
-        )
-    }
+    val chatSessions = remember { mutableStateListOf<BrokerChatSession>() }
 
     // Portal Stage: "otp_verification", "registration", "success", "dashboard"
     var currentPortalStage by remember { mutableStateOf("otp_verification") }
@@ -205,18 +162,18 @@ fun BrokerPortalScreen(navController: NavController) {
     var regPhotoUri by remember { mutableStateOf<Uri?>(null) }
 
     // Dynamic Profile Information for Broker
-    var brokerName by remember { mutableStateOf("Dinesh Deshmukh") }
-    var brokerPhone by remember { mutableStateOf("+91 98765 43210") }
-    var brokerFirmName by remember { mutableStateOf("Deshmukh Wholesale Trading Corp") }
+    var brokerName by remember { mutableStateOf(SessionManager.getInstance(context).userName.ifEmpty { "Agri Broker" }) }
+    var brokerPhone by remember { mutableStateOf(SessionManager.getInstance(context).userPhone.ifEmpty { "+91 ----------" }) }
+    var brokerFirmName by remember { mutableStateOf("AgroWorld Trading Agency") }
     var brokerType by remember { mutableStateOf("Commission Agent") }
-    var brokerServiceArea by remember { mutableStateOf("Junnar, Haveli, Baramati, Shirur Talukas") }
+    var brokerServiceArea by remember { mutableStateOf(SessionManager.getInstance(context).userDistrict.ifEmpty { "Trading Market" }) }
     var brokerPrimaryTrade by remember { mutableStateOf("Grains, Red Onions, Turmeric & Fruits") }
     var brokerPhotoUriState by remember { mutableStateOf<Uri?>(null) }
 
     // Interactive details variables
-    var selectedCropListingId by remember { mutableStateOf("bcl_1") }
-    var selectedDealId by remember { mutableStateOf("deal_101") }
-    var selectedChatSessionId by remember { mutableStateOf("chat_bs1") }
+    var selectedCropListingId by remember { mutableStateOf("") }
+    var selectedDealId by remember { mutableStateOf("") }
+    var selectedChatSessionId by remember { mutableStateOf("") }
 
     // Navigation and layout
     Scaffold(

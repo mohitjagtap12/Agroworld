@@ -1,6 +1,7 @@
 package com.example
 
 import android.widget.Toast
+import com.example.network.SessionManager
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
@@ -83,116 +84,11 @@ fun DeliveryPartnerPortalScreen(navController: NavController) {
     var currentScreen by remember { mutableStateOf("dashboard") }
 
     // Global Interactive Deliveries State in Memory
-    val deliveryOrders = remember {
-        mutableStateListOf(
-            DeliveryOrder(
-                id = "AW-DEL-8091",
-                customerName = "Ramesh Mandhare",
-                customerContact = "+91 94220 12345",
-                sellerName = "Kisan Seva Agri-Mall",
-                sellerContact = "+91 20 2445 9999",
-                pickupVillage = "APMC Market Yard, Pune",
-                pickupAddress = "Plot 104, APMC Market Yard Complex, Pune, MH - 411037",
-                deliveryVillage = "Junnar",
-                deliveryAddress = "Gat No. 112, Near Hanuman Temple, Junnar Taluka, Pune - 410502",
-                productDetails = "10 Bags of IFFCO Urea Fertilizer",
-                deliveryNotes = "Customer requested evening delivery after 5 PM. Call before starting.",
-                deliveryFee = 240.0,
-                orderDate = "18 July 2026",
-                status = "Assigned"
-            ),
-            DeliveryOrder(
-                id = "AW-DEL-8092",
-                customerName = "Sopan Rao Patil",
-                customerContact = "+91 98901 87654",
-                sellerName = "Deshmukh Seeds & Pesticides",
-                sellerContact = "+91 98223 55443",
-                pickupVillage = "Hadapsar APMC",
-                pickupAddress = "Shop No 14, Hadapsar Grain Market, Pune, MH - 411028",
-                deliveryVillage = "Haveli",
-                deliveryAddress = "Patil Wasti, Uruli Kanchan, Haveli Taluka, Pune - 412202",
-                productDetails = "3 Bottles of Bayer Confidor Insecticide",
-                deliveryNotes = "Fragile glass containers. Keep in stable cargo box.",
-                deliveryFee = 150.0,
-                orderDate = "18 July 2026",
-                status = "Picked Up"
-            ),
-            DeliveryOrder(
-                id = "AW-DEL-8093",
-                customerName = "Dnyaneshwar Hande",
-                customerContact = "+91 75881 99002",
-                sellerName = "Pune Wholesale Agri-Distributors",
-                sellerContact = "+91 20 2551 1102",
-                pickupVillage = "Wagholi Warehouse",
-                pickupAddress = "Gat No 510, Nagar Road, Wagholi, Pune, MH - 412207",
-                deliveryVillage = "Shirur",
-                deliveryAddress = "A/P Shikrapur, Shrikrushna Colony, Shirur, Pune - 412208",
-                productDetails = "200 Kg Durum Wheat Seeds (Lokwan)",
-                deliveryNotes = "Heavy sacks. Helper available at delivery spot.",
-                deliveryFee = 420.0,
-                orderDate = "17 July 2026",
-                status = "Out for Delivery"
-            ),
-            DeliveryOrder(
-                id = "AW-DEL-8094",
-                customerName = "Vilasrao Gade",
-                customerContact = "+91 90110 32415",
-                sellerName = "Kisan Seva Agri-Mall",
-                sellerContact = "+91 20 2445 9999",
-                pickupVillage = "APMC Market Yard, Pune",
-                pickupAddress = "Plot 104, APMC Market Yard Complex, Pune, MH - 411037",
-                deliveryVillage = "Khed",
-                deliveryAddress = "Chakan Road, near HP Petrol Pump, Rajgurunagar (Khed), Pune - 410505",
-                productDetails = "1 Falcon Premium Pruning Shear",
-                deliveryNotes = "Payment already processed via AgroWorld Pay.",
-                deliveryFee = 90.0,
-                orderDate = "17 July 2026",
-                status = "Delivered"
-            ),
-            DeliveryOrder(
-                id = "AW-DEL-8095",
-                customerName = "Maruti Tukaram",
-                customerContact = "+91 91580 44556",
-                sellerName = "Baramati Sugar Cooperative Store",
-                sellerContact = "+91 2112 22234",
-                pickupVillage = "Baramati MIDC",
-                pickupAddress = "Sector D-3, Baramati Industrial Area, Pune, MH - 413133",
-                deliveryVillage = "Baramati",
-                deliveryAddress = "Near Sugar Factory, Rui Village, Baramati, Pune - 413102",
-                productDetails = "5 Bags Organic Vermicompost",
-                deliveryNotes = "Contact customer if delayed by traffic.",
-                deliveryFee = 180.0,
-                orderDate = "16 July 2026",
-                status = "Delivered"
-            ),
-            DeliveryOrder(
-                id = "AW-DEL-8096",
-                customerName = "Baban Shinde",
-                customerContact = "+91 97300 11223",
-                sellerName = "Khed Crop Solutions",
-                sellerContact = "+91 99600 77889",
-                pickupVillage = "Rajgurunagar",
-                pickupAddress = "Opposite ST Stand, Rajgurunagar, Khed, Pune - 410505",
-                deliveryVillage = "Maval",
-                deliveryAddress = "Gat No 23, Kamshet, Maval Taluka, Pune - 410405",
-                productDetails = "10 Packets hybrid Bajra seeds",
-                deliveryNotes = "Customer cancelled due to rain.",
-                deliveryFee = 220.0,
-                orderDate = "15 July 2026",
-                status = "Cancelled"
-            )
-        )
-    }
+    val deliveryOrders = remember { mutableStateListOf<DeliveryOrder>() }
 
-    val notifications = remember {
-        mutableStateListOf(
-            DeliveryNotification("n_1", "New Delivery Assigned!", "AW-DEL-8091 is assigned to you. Pick up from Kisan Seva Agri-Mall.", "Just Now", "New"),
-            DeliveryNotification("n_2", "Payout Settled", "Weekly payout of ₹2,450 successfully transferred to your State Bank of India account.", "3 hours ago", "Info"),
-            DeliveryNotification("n_3", "Weather Alert", "Heavy rain predicted in Junnar and Maval taluka. Drive safely.", "1 day ago", "Alert")
-        )
-    }
+    val notifications = remember { mutableStateListOf<DeliveryNotification>() }
 
-    var selectedOrderId by remember { mutableStateOf("AW-DEL-8091") }
+    var selectedOrderId by remember { mutableStateOf("") }
 
     // Portal Stage: "otp_verification", "registration", "success", "dashboard"
     var currentPortalStage by remember { mutableStateOf("otp_verification") }
@@ -210,10 +106,10 @@ fun DeliveryPartnerPortalScreen(navController: NavController) {
     var regPhotoUri by remember { mutableStateOf<Uri?>(null) }
 
     // Dynamic Profile Information for Delivery Partner
-    var partnerName by remember { mutableStateOf("Ramesh Mandhare") }
-    var partnerPhone by remember { mutableStateOf("+91 94220 12345") }
+    var partnerName by remember { mutableStateOf(SessionManager.getInstance(context).userName.ifEmpty { "Delivery Partner" }) }
+    var partnerPhone by remember { mutableStateOf(SessionManager.getInstance(context).userPhone.ifEmpty { "+91 ----------" }) }
     var partnerVehicleType by remember { mutableStateOf("Two Wheeler") }
-    var partnerServiceArea by remember { mutableStateOf("Junnar, Haveli, Baramati, Shirur Talukas") }
+    var partnerServiceArea by remember { mutableStateOf(SessionManager.getInstance(context).userDistrict.ifEmpty { "Assigned Region" }) }
     var partnerServices by remember { mutableStateOf("Fresh Fruits, Fresh Vegetables, Grains & Pulses, Fertilizers, Pesticides, Seeds") }
     var partnerPhotoUriState by remember { mutableStateOf<Uri?>(null) }
 

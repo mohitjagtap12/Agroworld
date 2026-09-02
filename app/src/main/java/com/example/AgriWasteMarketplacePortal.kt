@@ -1,6 +1,7 @@
 package com.example
 
 import android.widget.Toast
+import com.example.network.SessionManager
 import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -63,8 +64,9 @@ fun FarmerAgriWasteHubScreen(
     var viewingListingDetails by remember { mutableStateOf<AgriWasteItem?>(null) }
     var viewingOrderDetails by remember { mutableStateOf<AgriWasteOrder?>(null) }
 
-    val farmerListings = AgriWasteDataHub.listings.filter { it.farmerId == "f_ramesh" || it.farmerName.contains("Ramesh") }
-    val farmerOrders = AgriWasteDataHub.orders.filter { it.farmerId == "f_ramesh" || it.farmerName.contains("Ramesh") }
+    val currentUserId = SessionManager.getInstance(context).userId.ifEmpty { "farmer_current" }
+    val farmerListings = AgriWasteDataHub.listings.filter { it.farmerId == currentUserId || it.farmerId.isEmpty() || it.farmerId == "farmer_current" }
+    val farmerOrders = AgriWasteDataHub.orders.filter { it.farmerId == currentUserId || it.farmerId.isEmpty() || it.farmerId == "farmer_current" }
     val pendingRequestsCount = farmerOrders.count { it.status == "Waiting for Farmer" || it.status == "Order Placed" }
 
     Scaffold(
